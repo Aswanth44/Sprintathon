@@ -1,0 +1,101 @@
+.progressContainer {
+  width: 100%;
+  padding: var(--space-2) 0 var(--space-4);
+}
+
+.stepsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.stepNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  z-index: 2;
+}
+
+.nodeCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border: 2px solid var(--color-border-mid);
+  transition: all var(--transition-smooth);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: background var(--transition-base);
+}
+
+.checkIcon {
+  color: var(--color-white);
+  stroke-width: 3;
+}
+
+.stepLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-muted);
+  transition: color var(--transition-base);
+}
+
+/* Active Step */
+.active .nodeCircle {
+  border-color: var(--color-green-mid);
+  box-shadow: 0 0 0 4px rgba(45, 106, 79, 0.15);
+  background: var(--color-green-deep);
+}
+
+.active .dot {
+  background: var(--color-gold-light);
+  width: 10px;
+  height: 10px;
+}
+
+.active .stepLabel {
+  color: var(--color-green-deep);
+}
+
+/* Completed Step */
+.completed .nodeCircle {
+  background: var(--color-green-mid);
+  border-color: var(--color-green-mid);
+}
+
+.completed .stepLabel {
+  color: var(--color-green-mid);
+}
+
+/* Upcoming Step */
+.upcoming .nodeCircle {
+  background: var(--color-off-white);
+  border-color: var(--color-border-light);
+}
+
+/* Connecting Line */
+.lineTrack {
+  position: absolute;
+  top: 14px;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+  background: var(--color-border-light);
+  z-index: 1;
+}
+
+.lineProgress {
+  height: 100%;
+  background: var(--color-green-mid);
+  transition: width var(--transition-smooth);
+}

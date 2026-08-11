@@ -1,0 +1,248 @@
+/* ══════════════════════════════════════════════════════════
+   LOGIN PAGE — Layout & Auth Card
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Page Shell ───────────────────────────────────────────── */
+.page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--color-charcoal);
+  overflow: hidden;
+}
+
+/* ── Left Visual Panel ────────────────────────────────────── */
+.leftPanel {
+  position: relative;
+  flex: 0 0 55%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Official logo — sits on top of the 3D scene */
+.leftLogoWrap {
+  position: absolute;
+  top: var(--space-8);
+  left: var(--space-8);
+  z-index: 10;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ── Scene fallback (shown while Three.js lazy-loads) ─────── */
+.sceneFallback {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #071a0e 0%, #0d2218 50%, #071a0e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sceneFallbackPulse {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(82, 183, 136, 0.18) 0%, transparent 70%);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.5; }
+  50%       { transform: scale(1.2);  opacity: 1;   }
+}
+
+/* ── Right Auth Panel ─────────────────────────────────────── */
+.rightPanel {
+  flex: 0 0 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-8);
+  background: var(--color-off-white);
+  min-height: 100vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Subtle top-left accent line */
+.rightPanel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--color-green-light) 30%,
+    var(--color-gold) 70%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+/* ── Auth Card ────────────────────────────────────────────── */
+.authCard {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Mobile logo — hidden on desktop, shown on mobile ─────── */
+.mobileLogoWrap {
+  display: none;
+  justify-content: center;
+  padding-bottom: var(--space-2);
+}
+
+/* ── Auth Header ──────────────────────────────────────────── */
+.authHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.authTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.titleAccent {
+  /* "UzhavarSetu" in brand gold */
+  background: linear-gradient(135deg, var(--color-green-deep) 0%, var(--color-green-mid) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.authSubtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-snug);
+}
+
+/* ── Form Area ────────────────────────────────────────────── */
+.formArea {
+  overflow: hidden;
+  /* Reserve space so the card doesn't jump during animation */
+  min-height: 280px;
+}
+
+/* ── Auth Footer ──────────────────────────────────────────── */
+.authFooter {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.authFooterText {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: var(--leading-relaxed);
+}
+
+.authFooterLink {
+  color: var(--color-green-mid);
+  font-weight: var(--font-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-base);
+}
+.authFooterLink:hover { color: var(--color-green-deep); }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Tablet (≤ 1100px) ─────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .leftPanel  { flex: 0 0 52%; }
+  .rightPanel { flex: 0 0 48%; padding: var(--space-8) var(--space-6); }
+  .leftLogoWrap { top: var(--space-6); left: var(--space-6); }
+  .authTitle { font-size: var(--text-xl); }
+}
+
+/* ── Small tablet (≤ 900px) ──────────────────────────────── */
+@media (max-width: 900px) {
+  .leftPanel  { flex: 0 0 48%; }
+  .rightPanel { flex: 0 0 52%; padding: var(--space-6) var(--space-5); }
+}
+
+/* ── Mobile (≤ 768px) — vertical stack ───────────────────── */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .leftPanel {
+    flex: none;
+    width: 100%;
+    height: 260px;
+    min-height: unset;
+  }
+
+  /* Hide the full logo on left panel — mobile logo in card replaces it */
+  .leftLogoWrap { display: none; }
+
+  .rightPanel {
+    flex: 1;
+    width: 100%;
+    min-height: unset;
+    padding: var(--space-6) var(--space-5) var(--space-12);
+    align-items: flex-start;
+    overflow-y: visible;
+  }
+
+  .rightPanel::before { display: none; }
+
+  .authCard {
+    gap: var(--space-5);
+    padding-top: var(--space-2);
+    max-width: 100%;
+  }
+
+  /* Show mobile logo */
+  .mobileLogoWrap { display: flex; }
+
+  .authTitle    { font-size: var(--text-xl); }
+  .authSubtitle { font-size: var(--text-sm); }
+
+  .formArea { min-height: 240px; }
+}
+
+/* ── Small mobile (≤ 480px) ──────────────────────────────── */
+@media (max-width: 480px) {
+  .leftPanel { height: 200px; }
+
+  .rightPanel {
+    padding: var(--space-5) var(--space-4) var(--space-16);
+  }
+
+  .authTitle { font-size: var(--text-lg); }
+}
+
+/* ── Landscape on mobile (short viewport) ─────────────────── */
+@media (max-width: 768px) and (orientation: landscape) {
+  .page { flex-direction: row; }
+  .leftPanel  { flex: 0 0 45%; height: 100vh; }
+  .rightPanel { flex: 1; padding: var(--space-4) var(--space-5); overflow-y: auto; min-height: 100vh; }
+  .mobileLogoWrap { display: none; }
+  .leftLogoWrap   { display: block; }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .sceneFallbackPulse { animation: none; opacity: 0.5; }
+}

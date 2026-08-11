@@ -1,0 +1,36 @@
+.logoWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  /* Subtle drop shadow to make the logo pop on dark backgrounds */
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.35));
+  transition: filter 0.3s ease;
+}
+
+.logoWrap:hover {
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.45));
+}
+
+.logoImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Sizes ───────────────────────────────────────────────── */
+.size--sm  { width: 120px; }
+.size--md  { width: 160px; }
+.size--lg  { width: 210px; }
+.size--xl  { width: 270px; }
+.size--2xl { width: 340px; }
+
+/* On mobile the logo inside auth card should never overflow */
+@media (max-width: 480px) {
+  .size--lg  { width: 170px; }
+  .size--xl  { width: 200px; }
+  .size--2xl { width: 240px; }
+}

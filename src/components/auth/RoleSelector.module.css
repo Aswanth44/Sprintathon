@@ -1,0 +1,78 @@
+.roleSelector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+  background: var(--color-green-pale);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-xl);
+  padding: var(--space-1);
+}
+
+/* ── Role Button ──────────────────────────────────────────── */
+.roleBtn {
+  position: relative;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: color var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+
+/* Active animated pill (sits behind content via z-index) */
+.activePill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-green-deep);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-green);
+  z-index: 0;
+}
+
+.roleBtnContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.roleIcon {
+  flex-shrink: 0;
+  transition: color var(--transition-base);
+}
+
+.roleLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  letter-spacing: 0.01em;
+  transition: color var(--transition-base);
+}
+
+/* ── Inactive state ───────────────────────────────────────── */
+.roleBtn .roleIcon,
+.roleBtn .roleLabel {
+  color: var(--color-text-secondary);
+}
+
+/* ── Active state ─────────────────────────────────────────── */
+.roleBtnActive .roleIcon,
+.roleBtnActive .roleLabel {
+  color: var(--color-white);
+}
+
+/* ── Hover ────────────────────────────────────────────────── */
+.roleBtn:not(.roleBtnActive):hover .roleLabel,
+.roleBtn:not(.roleBtnActive):hover .roleIcon {
+  color: var(--color-green-deep);
+}
+
+/* ── Touch target ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .roleBtn { padding: var(--space-4); }
+  .roleLabel { font-size: var(--text-base); }
+  .roleIcon { width: 20px; height: 20px; }
+}
