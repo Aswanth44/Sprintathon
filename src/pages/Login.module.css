@@ -4,6 +4,7 @@
 
 /* ── Page Shell ───────────────────────────────────────────── */
 .page {
+  display:none;
   display: flex;
   min-height: 100vh;
   width: 100%;
@@ -187,10 +188,12 @@
   }
 
   .leftPanel {
+    display: none;
     flex: none;
     width: 100%;
-    height: 260px;
-    min-height: unset;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* Hide the full logo on left panel — mobile logo in card replaces it */
@@ -201,16 +204,18 @@
     width: 100%;
     min-height: unset;
     padding: var(--space-6) var(--space-5) var(--space-12);
-    align-items: flex-start;
+    align-items: center;
     overflow-y: visible;
   }
 
   .rightPanel::before { display: none; }
 
   .authCard {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
     gap: var(--space-5);
     padding-top: var(--space-2);
-    max-width: 100%;
   }
 
   /* Show mobile logo */
@@ -219,7 +224,24 @@
   .authTitle    { font-size: var(--text-xl); }
   .authSubtitle { font-size: var(--text-sm); }
 
-  .formArea { min-height: 240px; }
+  .formArea { min-height: 220px; }
+}
+
+@media (max-width: 480px) {
+  .leftPanel { height: 200px; }
+
+  .rightPanel {
+    padding: var(--space-5) var(--space-4) var(--space-16);
+    align-items: center;
+  }
+
+  .authCard {
+    max-width: 100%;
+    padding-top: var(--space-1);
+  }
+
+  .authTitle { font-size: var(--text-lg); }
+  .formArea { min-height: 200px; }
 }
 
 /* ── Small mobile (≤ 480px) ──────────────────────────────── */
@@ -235,11 +257,18 @@
 
 /* ── Landscape on mobile (short viewport) ─────────────────── */
 @media (max-width: 768px) and (orientation: landscape) {
-  .page { flex-direction: row; }
-  .leftPanel  { flex: 0 0 45%; height: 100vh; }
+  .page { flex-direction: column; }
+  .leftPanel {
+    display: none;
+    flex: none;
+    width: 100%;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
   .rightPanel { flex: 1; padding: var(--space-4) var(--space-5); overflow-y: auto; min-height: 100vh; }
-  .mobileLogoWrap { display: none; }
-  .leftLogoWrap   { display: block; }
+  .mobileLogoWrap { display: flex; }
+  .leftLogoWrap   { display: none; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────── */

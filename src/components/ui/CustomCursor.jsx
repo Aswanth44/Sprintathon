@@ -9,35 +9,15 @@ import styles from './CustomCursor.module.css'
 function FarmerCursorIcon() {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 -960 960 960"
       width="22"
       height="22"
-      fill="none"
+      fill="#e3e3e3"
       xmlns="http://www.w3.org/2000/svg"
       className={styles.cursorSvg}
       aria-hidden="true"
     >
-      {/* Stem */}
-      <path
-        d="M12 22 L12 10"
-        stroke="#1a4a2e"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      {/* Left leaf */}
-      <path
-        d="M12 16 C9 14.5 7 11 8.5 7.5 C8.5 7.5 11 9.5 12 13"
-        fill="#2d6a4f"
-        opacity="0.9"
-      />
-      {/* Right leaf */}
-      <path
-        d="M12 13 C15 11.5 17 8 15.5 4.5 C15.5 4.5 13 6.5 12 10"
-        fill="#52b788"
-        opacity="0.95"
-      />
-      {/* Sprout tip */}
-      <circle cx="12" cy="9.5" r="1.5" fill="#d4a017" />
+      <path d="M216-176q-45-45-70.5-104T120-402q0-63 24-124.5T222-642q35-35 86.5-60t122-39.5Q501-756 591.5-759t202.5 7q8 106 5 195t-16.5 160.5q-13.5 71.5-38 125T684-182q-53 53-112.5 77.5T450-80q-65 0-127-25.5T216-176Zm112-16q29 17 59.5 24.5T450-160q46 0 91-18.5t86-59.5q18-18 36.5-50.5t32-85Q709-426 716-500.5t2-177.5q-49-2-110.5-1.5T485-670q-61 9-116 29t-90 55q-45 45-62 89t-17 85q0 59 22.5 103.5T262-246q42-80 111-153.5T534-520q-72 63-125.5 142.5T328-192Zm0 0Zm0 0Z" />
     </svg>
   )
 }
@@ -45,34 +25,15 @@ function FarmerCursorIcon() {
 function BuyerCursorIcon() {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 -960 960 960"
       width="22"
       height="22"
-      fill="none"
+      fill="#e3e3e3"
       xmlns="http://www.w3.org/2000/svg"
       className={styles.cursorSvg}
       aria-hidden="true"
     >
-      {/* Basket body */}
-      <path
-        d="M5 10 L6.5 18 H17.5 L19 10 Z"
-        fill="#2d6a4f"
-        stroke="#1a4a2e"
-        strokeWidth="0.8"
-      />
-      {/* Basket handle */}
-      <path
-        d="M8 10 C8 6.5 16 6.5 16 10"
-        stroke="#1a4a2e"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Basket weave lines */}
-      <line x1="5" y1="13.5" x2="19" y2="13.5" stroke="#52b788" strokeWidth="0.7" opacity="0.6" />
-      <line x1="12" y1="10" x2="12" y2="18" stroke="#52b788" strokeWidth="0.7" opacity="0.5" />
-      {/* Gold accent dot */}
-      <circle cx="12" cy="7.5" r="1.2" fill="#d4a017" />
+      <path d="M200-80q-33 0-56.5-23.5T120-160v-480q0-33 23.5-56.5T200-720h80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720h80q33 0 56.5 23.5T840-640v480q0 33-23.5 56.5T760-80H200Zm0-80h560v-480H200v480Zm421.5-298.5Q680-517 680-600h-80q0 50-35 85t-85 35q-50 0-85-35t-35-85h-80q0 83 58.5 141.5T480-400q83 0 141.5-58.5ZM360-720h240q0-50-35-85t-85-35q-50 0-85 35t-35 85ZM200-160v-480 480Z" />
     </svg>
   )
 }

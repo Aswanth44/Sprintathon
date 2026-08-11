@@ -171,12 +171,14 @@ export default function LoginPage({ onNavigate }) {
       )}
 
       <main className={styles.page}>
-        {/* Left: 3D agricultural visual */}
-        <VisualPanel
-          logoParallax={logoParallax}
-          isMobile={isMobile}
-          reducedMotion={reducedMotion}
-        />
+        {/* Left: 3D agricultural visual (hidden on mobile) */}
+        {!isMobile && (
+          <VisualPanel
+            logoParallax={logoParallax}
+            isMobile={isMobile}
+            reducedMotion={reducedMotion}
+          />
+        )}
 
         {/* Right: Auth card */}
         <AuthPanel role={role} onRoleChange={setRole} onNavigate={onNavigate} />
