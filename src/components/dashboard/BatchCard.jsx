@@ -95,12 +95,25 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
         </div>
       </div>
 
-      <button
-        onClick={() => onTrackClick && onTrackClick(batch.batchId)}
-        className={styles.trackBtn}
-      >
-        Track Verified Journey <ArrowRight size={15} />
-      </button>
+      <div className={styles.actionBtnRow}>
+        <button
+          type="button"
+          onClick={() => {
+            if (onQrClick) onQrClick(batch)
+            else window.location.hash = `#/verify-batch/${batch.batchId}`
+          }}
+          className={styles.qrBtn}
+        >
+          View Batch QR
+        </button>
+        <button
+          type="button"
+          onClick={() => onTrackClick && onTrackClick(batch.batchId)}
+          className={styles.trackBtn}
+        >
+          Track Verified Journey <ArrowRight size={15} />
+        </button>
+      </div>
     </div>
   )
 }

@@ -4,19 +4,25 @@ import FarmerRegister from './pages/FarmerRegister'
 import BuyerRegister from './pages/BuyerRegister'
 import FarmerDashboard from './pages/FarmerDashboard'
 import BuyerDashboard from './pages/BuyerDashboard'
+import VerifyBatchPage from './pages/VerifyBatchPage'
 
 /**
  * App Root View Controller
- * Supports hash navigation (#login, #farmer-register, #buyer-register, #farmer-dashboard, #buyer-dashboard)
- * as well as direct callback prop navigation.
+ * Supports hash navigation (#login, #farmer-register, #buyer-register, #farmer-dashboard, #buyer-dashboard, #buyer-marketplace, #buyer-offers, #verify-batch)
  */
 export default function App() {
   const getInitialView = () => {
     const hash = window.location.hash.replace('#', '')
+    if (hash.includes('verify-batch') || hash.includes('/batch/')) {
+      return 'verify-batch'
+    }
     if (['farmer-register', 'buyer-register', 'farmer-dashboard', 'buyer-dashboard'].includes(hash)) {
       return hash
     }
-    if (hash.startsWith('/') || hash.includes('market-prices')) {
+    if (hash.startsWith('buyer-') || hash === 'marketplace') {
+      return 'buyer-dashboard'
+    }
+    if (hash.startsWith('/') || hash.includes('market-prices') || hash.includes('farmer-dashboard')) {
       return 'farmer-dashboard'
     }
     return 'login'
@@ -27,9 +33,13 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '')
-      if (['farmer-register', 'buyer-register', 'farmer-dashboard', 'buyer-dashboard', 'login'].includes(hash)) {
+      if (hash.includes('verify-batch') || hash.includes('/batch/')) {
+        setCurrentView('verify-batch')
+      } else if (['farmer-register', 'buyer-register', 'farmer-dashboard', 'buyer-dashboard', 'login'].includes(hash)) {
         setCurrentView(hash)
-      } else if (hash.startsWith('/') || hash.includes('market-prices') || hash.includes('batches') || hash.includes('offers')) {
+      } else if (hash.startsWith('buyer-') || hash === 'marketplace') {
+        setCurrentView('buyer-dashboard')
+      } else if (hash.startsWith('/') || hash.includes('market-prices') || hash.includes('batches')) {
         setCurrentView('farmer-dashboard')
       } else if (!hash) {
         setCurrentView('login')
@@ -47,6 +57,8 @@ export default function App() {
   }
 
   switch (currentView) {
+    case 'verify-batch':
+      return <VerifyBatchPage onNavigate={navigateTo} />
     case 'farmer-register':
       return <FarmerRegister onNavigate={navigateTo} />
     case 'buyer-register':

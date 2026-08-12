@@ -1,0 +1,147 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.editProfileBtn {
+  height: 42px;
+  padding: 0 var(--space-5);
+  background: var(--color-green-deep);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: var(--color-white);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+}
+
+.profileCard {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.avatarCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-green-deep);
+  color: var(--color-gold);
+  font-size: 1.8rem;
+  font-weight: var(--font-extrabold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.3);
+  flex-shrink: 0;
+}
+
+.identityInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.buyerName {
+  font-size: 1.3rem;
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  margin: 0;
+}
+
+.verifiedBadge {
+  background: #d8f3dc;
+  color: #1b4332;
+  border: 1px solid #b7e4c7;
+  font-size: 0.72rem;
+  font-weight: var(--font-bold);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.buyerIdTag {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-bold);
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.specCard {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.icon {
+  color: var(--color-green-mid);
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 0.68rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  display: block;
+}
+
+.val {
+  font-size: var(--text-xs);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+}

@@ -25,6 +25,8 @@ import CreateBatchPage from '../components/dashboard/CreateBatchPage'
 import BatchQrView from '../components/dashboard/BatchQrView'
 import BatchDetailsView from '../components/dashboard/BatchDetailsView'
 import TrackJourneyView from '../components/dashboard/TrackJourneyView'
+import FarmerBuyerOffersView from '../components/dashboard/FarmerBuyerOffersView'
+import NotificationModal from '../components/common/NotificationModal'
 import Logo from '../components/branding/Logo'
 
 // API Services — Centralized API Layer
@@ -47,6 +49,7 @@ export default function FarmerDashboard({ onNavigate }) {
   const [activeTab, setActiveTab]                 = useState('dashboard')
   const [isMobileMenuOpen, setIsMobileMenuOpen]   = useState(false)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isNotifModalOpen, setIsNotifModalOpen]   = useState(false)
   const [subViewData, setSubViewData]             = useState(null)
 
   // API State
@@ -264,20 +267,6 @@ export default function FarmerDashboard({ onNavigate }) {
           </div>
 
           <div className={styles.headerRight}>
-            {/* Language Selector Dropdown */}
-            <div className={styles.langSelectWrap}>
-              <Globe size={15} className={styles.globeIcon} />
-              <select
-                value={language}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className={styles.langSelect}
-                aria-label="Select Language"
-              >
-                <option value="English">English</option>
-                <option value="தமிழ்">தமிழ் (Tamil)</option>
-              </select>
-            </div>
-
             <span className={styles.profileBadge}>
               <span className={styles.avatarCircle}>
                 {farmerProfile.name ? farmerProfile.name.charAt(0) : 'A'}
@@ -287,12 +276,23 @@ export default function FarmerDashboard({ onNavigate }) {
               </span>
             </span>
 
-            <button className={styles.notificationBtn} aria-label="Notifications">
+            <button
+              onClick={() => setIsNotifModalOpen(!isNotifModalOpen)}
+              className={styles.notificationBtn}
+              aria-label="Notifications"
+            >
               <Bell size={18} />
               <span className={styles.notifDot} />
             </button>
           </div>
         </header>
+
+        <NotificationModal
+          isOpen={isNotifModalOpen}
+          role="farmer"
+          onClose={() => setIsNotifModalOpen(false)}
+          onNavigateTab={(tab) => handleTabChange(tab)}
+        />
 
         {/* Floating Toast Popup on Left */}
         {toastMsg && (
@@ -438,6 +438,7 @@ export default function FarmerDashboard({ onNavigate }) {
                         <BatchCard
                           key={b.batchId}
                           batch={b}
+                          onQrClick={(batchObj) => handleNavigateSubView('batch-qr', { batch: batchObj })}
                           onTrackClick={(batchId) => handleNavigateSubView('track-journey', { batchId, batch: b })}
                         />
                       ))}
@@ -453,15 +454,7 @@ export default function FarmerDashboard({ onNavigate }) {
 
               {/* TAB: BUYER OFFERS */}
               {activeTab === 'offers' && (
-                <div className={styles.tabSection}>
-                  <div className={styles.tabHeaderRow}>
-                    <div>
-                      <h2 className={styles.tabTitle}>Buyer Offers &amp; Bids</h2>
-                      <p className={styles.tabSubtitle}>Compare net payouts after transport deductions</p>
-                    </div>
-                  </div>
-                  <OfferCard offer={topOffer} totalOffersCount={offers.length} onViewOffersClick={() => {}} />
-                </div>
+                <FarmerBuyerOffersView />
               )}
 
               {/* TAB: DEDICATED BATCH JOURNEY VIEW */}
@@ -479,10 +472,29 @@ export default function FarmerDashboard({ onNavigate }) {
                   <div className={styles.tabHeaderRow}>
                     <div>
                       <h2 className={styles.tabTitle}>Verified Produce History</h2>
-                      <p className={styles.tabSubtitle}>Past completed transactions and payouts</p>
+                      <p className={styles.tabSubtitle}>Tamper-evident verification record &amp; past journey logs</p>
                     </div>
                   </div>
-                  <RecentActivity />
+                  <div className={styles.batchesListGrid}>
+                    {safeBatches.map((b) => (
+                      <div key={b.batchId} style={{ background: '#fff', border: '1px solid var(--color-border-light)', borderRadius: 'var(--radius-xl)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <strong>{b.crop} ({b.batchId})</strong>
+                          <span style={{ background: '#d8f3dc', color: '#1b4332', fontSize: '0.7rem', fontWeight: 'bold', padding: '2px 8px', borderRadius: '9999px' }}>✓ Verified Record</span>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+                          Stage: <strong>{b.currentStage || 'FARM'}</strong> • Qty: <strong>{b.quantity} {b.unit || 'kg'}</strong> • Grade: <strong>{b.quality || 'Grade A'}</strong>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleNavigateSubView('track-journey', { batchId: b.batchId, batch: b })}
+                          style={{ height: 38, background: 'var(--color-green-deep)', color: '#fff', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 'bold', fontSize: '0.75rem', cursor: 'pointer' }}
+                        >
+                          View Journey →
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
