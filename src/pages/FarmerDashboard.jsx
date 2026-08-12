@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Plus,
   Loader2,
+  Package,
 } from 'lucide-react'
 import Sidebar from '../components/dashboard/Sidebar'
 import MobileBottomNav from '../components/dashboard/MobileBottomNav'
@@ -16,6 +17,10 @@ import OfferCard from '../components/dashboard/OfferCard'
 import QuickActions from '../components/dashboard/QuickActions'
 import RecentActivity from '../components/dashboard/RecentActivity'
 import CreateBatchModal from '../components/dashboard/CreateBatchModal'
+import SettingsView from '../components/dashboard/SettingsView'
+import CreateBatchPage from '../components/dashboard/CreateBatchPage'
+import BatchQrView from '../components/dashboard/BatchQrView'
+import BatchDetailsView from '../components/dashboard/BatchDetailsView'
 import Logo from '../components/branding/Logo'
 
 // API Services — Centralized API Layer
@@ -37,6 +42,7 @@ export default function FarmerDashboard({ onNavigate }) {
   const [activeTab, setActiveTab]                 = useState('dashboard')
   const [isMobileMenuOpen, setIsMobileMenuOpen]   = useState(false)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [subViewData, setSubViewData]             = useState(null)
 
   // API State
   const [loading, setLoading]                     = useState(true)
@@ -57,13 +63,12 @@ export default function FarmerDashboard({ onNavigate }) {
           getMarketPrices(),
           getOffers(),
         ])
-
         setDashboardData(dashRes)
         setBatches(batchesRes)
         setMarketPrices(marketRes)
         setOffers(offersRes)
       } catch (err) {
-        console.error('Failed to load dashboard API data:', err)
+        console.error('Failed to fetch Farmer Dashboard API data:', err)
       } finally {
         setLoading(false)
       }
@@ -72,173 +77,210 @@ export default function FarmerDashboard({ onNavigate }) {
     loadData()
   }, [])
 
-  const handleLogout = () => {
-    onNavigate('login')
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    setIsMobileMenuOpen(false)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
   }
 
-  const handleBatchCreated = (newBatchObj) => {
-    if (newBatchObj) {
-      setBatches((prev) => [newBatchObj, ...prev])
+  const handleNavigateSubView = (tabId, extraData = null) => {
+    if (extraData) {
+      setSubViewData(extraData)
+    }
+    handleTabChange(tabId)
+  }
+
+  // Refreshes produce batches list when a new batch is created
+  const handleBatchCreated = async (newBatch) => {
+    if (newBatch) {
+      setBatches((prev) => [newBatch, ...prev.filter((b) => b.batchId !== newBatch.batchId)])
+    }
+    try {
+      const refreshedBatches = await getBatches()
+      setBatches(refreshedBatches)
+    } catch {
+      /* fallback */
     }
   }
 
-  // Extracted values from API responses
+  const handleLogout = () => {
+    if (onNavigate) {
+      onNavigate('login')
+    }
+  }
+
+  const handleProfileUpdated = (updatedProfile) => {
+    if (dashboardData) {
+      setDashboardData({
+        ...dashboardData,
+        farmer: {
+          ...dashboardData.farmer,
+          name: updatedProfile.name || dashboardData.farmer.name,
+          mobile: updatedProfile.mobile || dashboardData.farmer.mobile,
+          village: updatedProfile.village || dashboardData.farmer.village,
+          district: updatedProfile.district || dashboardData.farmer.district,
+          state: updatedProfile.state || dashboardData.farmer.state,
+          farmSize: updatedProfile.farmSize || dashboardData.farmer.farmSize,
+          primaryCrops: updatedProfile.primaryCrops || dashboardData.farmer.primaryCrops,
+        },
+      })
+    }
+  }
+
   const farmerProfile = dashboardData?.farmer || {
     name: 'Aswanth',
-    location: 'Coimbatore, Tamil Nadu',
-    status: 'Verified Farmer',
-    farmerId: 'FARM-TN-3789',
-    phone: '+91 98765 43210',
-    primaryCrop: 'Tomato',
-    farmSize: '5.5 Acres',
-    rating: 4.9,
-    totalBatchesSold: 24,
+    mobile: '+91 98765 43210',
+    village: 'Coimbatore',
+    district: 'Coimbatore',
+    state: 'Tamil Nadu',
+    farmSize: '5.5 acres',
+    primaryCrops: ['Tomato', 'Onion', 'Coconut'],
+    verified: true,
   }
 
   const summary = dashboardData?.summary || {
-    marketPrice: 42,
-    activeBatches: batches.length || 3,
-    buyerOffers: offers.length || 5,
-    inTransit: 2,
+    activeBatchesCount: batches.length || 3,
+    totalOffersCount: offers.length || 5,
+    estimatedPayout: '₹ 1,42,000',
+    fairPriceRange: '₹38 - ₹45 / kg',
   }
 
-  const summaryCardsData = [
-    {
-      id: 'market-price',
-      title: "Today's Market Price",
-      value: `₹${summary.marketPrice}/kg`,
-      subtext: 'Tomato (Grade A)',
-      trend: '+6.2%',
-      trendPositive: true,
-      icon: 'TrendingUp',
-      accentColor: 'var(--color-gold)',
-      bgColor: 'rgba(212, 160, 23, 0.1)',
-    },
-    {
-      id: 'active-batches',
-      title: 'Active Batches',
-      value: `${batches.length || summary.activeBatches}`,
-      subtext: '500 kg in transit',
-      trend: '2 pending pickup',
-      trendPositive: true,
-      icon: 'Package',
-      accentColor: 'var(--color-green-mid)',
-      bgColor: 'rgba(45, 106, 79, 0.1)',
-    },
-    {
-      id: 'buyer-offers',
-      title: 'Buyer Offers',
-      value: `${offers.length || summary.buyerOffers}`,
-      subtext: 'Top offer ₹44/kg',
-      trend: '+2 new today',
-      trendPositive: true,
-      icon: 'HandCoins',
-      accentColor: '#2b6cb0',
-      bgColor: 'rgba(43, 108, 176, 0.1)',
-    },
-    {
-      id: 'in-transit',
-      title: 'Produce in Transit',
-      value: `${summary.inTransit}`,
-      subtext: 'En route to Market',
-      trend: 'ETA Today 5 PM',
-      trendPositive: true,
-      icon: 'Truck',
-      accentColor: '#805ad5',
-      bgColor: 'rgba(128, 90, 213, 0.1)',
-    },
-  ]
+  const primaryBatch = batches[0] || {
+    batchId: 'UZH-TOM-00128',
+    crop: 'Tomato',
+    quantity: '500 kg',
+    quality: 'Grade A',
+    status: 'IN_TRANSIT',
+    harvestDate: '2026-08-10',
+  }
 
-  const primaryBatch = batches[0]
-  const topOffer     = offers[0]
+  const topOffer = offers[0] || {
+    buyerName: 'Coimbatore Fresh Retail',
+    location: 'Coimbatore, TN',
+    offeredPrice: 42,
+    marketPrice: 38,
+    transportDeduction: 2,
+    netPayout: 40,
+    crop: 'Tomato',
+  }
 
   return (
     <div className={styles.dashboardContainer}>
       {/* Sidebar Navigation */}
       <Sidebar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
+        batchesCount={batches.length}
+        offersCount={offers.length}
         onLogout={handleLogout}
-        isOpenMobile={isMobileMenuOpen}
-        onCloseMobile={() => setIsMobileMenuOpen(false)}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Main Content Wrapper */}
+      {/* Main Layout Area */}
       <div className={styles.mainWrapper}>
-        {/* Top Header Bar */}
+        {/* Global Dashboard Header */}
         <header className={styles.topHeader}>
           <div className={styles.headerLeft}>
             <button
-              onClick={() => setIsMobileMenuOpen(true)}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={styles.menuToggleBtn}
-              aria-label="Open navigation menu"
+              aria-label="Toggle Navigation Menu"
             >
               <Menu size={22} />
             </button>
-            <div className={styles.headerLogoWrap}>
-              <Logo size="sm" />
-            </div>
+
             <div className={styles.greetingWrap}>
-              <h1 className={styles.greetingText}>
-                Good Morning, {farmerProfile.name} 👋
+              <h1 className={styles.greetingTitle}>
+                Welcome, {farmerProfile.name} 👋
               </h1>
-              <div className={styles.locationTag}>
-                <MapPin size={13} className={styles.mapIcon} />
-                <span>{farmerProfile.location}</span>
-              </div>
+              <p className={styles.greetingSubtitle}>
+                <MapPin size={13} /> {farmerProfile.location || `${farmerProfile.village || 'Coimbatore'}, ${farmerProfile.state || 'Tamil Nadu'}`}
+              </p>
             </div>
           </div>
 
+          <div className={styles.headerLogoWrap}>
+            <Logo height={32} isLight={false} />
+          </div>
+
           <div className={styles.headerRight}>
-            <div className={styles.profileBadge}>
-              <CheckCircle2 size={15} className={styles.verifiedIcon} />
-              <span className={styles.verifiedText}>{farmerProfile.status}</span>
-            </div>
-            <button
-              className={styles.notificationBtn}
-              aria-label="Notifications (3 unread)"
-              title="Notifications"
-            >
-              <Bell size={19} />
+            <span className={styles.profileBadge}>
+              <span className={styles.avatarCircle}>
+                {farmerProfile.name ? farmerProfile.name.charAt(0) : 'A'}
+              </span>
+              <span className={styles.verifiedText}>
+                <CheckCircle2 size={10} className={styles.verifiedIcon} /> Verified Farmer
+              </span>
+            </span>
+
+            <button className={styles.notificationBtn} aria-label="Notifications">
+              <Bell size={18} />
               <span className={styles.notifDot} />
             </button>
           </div>
         </header>
 
-        {/* Content Body */}
+        {/* Dynamic Content Body Area */}
         <main className={styles.contentBody}>
           {loading ? (
-            /* API Loading State */
             <div className={styles.loadingContainer}>
               <Loader2 size={36} className={styles.spinner} />
-              <p className={styles.loadingText}>Fetching live market &amp; batch data via API Layer...</p>
+              <p className={styles.loadingText}>Loading UzhavarSetu Dashboard...</p>
             </div>
           ) : (
             <>
-              {/* TAB: DASHBOARD */}
+              {/* TAB: DASHBOARD HOME */}
               {activeTab === 'dashboard' && (
                 <div className={styles.dashboardGrid}>
-                  {/* 1. Summary Cards */}
-                  <section className={styles.summaryGrid} aria-label="Summary metrics">
-                    {summaryCardsData.map((stat) => (
-                      <SummaryCard key={stat.id} {...stat} />
-                    ))}
-                  </section>
-
-                  {/* 2. Quick Actions */}
-                  <section>
-                    <QuickActions
-                      onCreateBatchClick={() => setIsCreateModalOpen(true)}
-                      onTabChange={setActiveTab}
+                  {/* Summary Metric Cards */}
+                  <div className={styles.summaryGrid}>
+                    <SummaryCard
+                      title="In Transit & Stored"
+                      value={summary.inTransitAndStored || 5}
+                      subtext="Batches currently moving/stored"
+                      icon="Truck"
                     />
-                  </section>
+                    <SummaryCard
+                      title="Pending Review"
+                      value={summary.pendingReview || 2}
+                      subtext="Batches awaiting verification"
+                      icon="Package"
+                    />
+                    <SummaryCard
+                      title="Highest Buyer Bid"
+                      value={`₹${summary.highestBuyerBid || 44}/${summary.highestBuyerBidUnit || 'kg'}`}
+                      subtext={summary.highestBuyerBidCrop || 'Tomato'}
+                      icon="HandCoins"
+                    />
+                    <SummaryCard
+                      title="Govt. Mandi Index"
+                      value={`₹${summary.mandiIndex || 42}/${summary.mandiIndexUnit || 'kg'}`}
+                      subtext={`${summary.mandiIndexCrop || 'Tomato'} • ${summary.mandiIndexLocation || 'Coimbatore'}`}
+                      icon="TrendingUp"
+                    />
+                  </div>
 
-                  {/* 3. Main Dashboard Two-Column Grid */}
+                  {/* Main Two Column Layout */}
                   <div className={styles.twoColumnGrid}>
                     {/* Left Column */}
                     <div className={styles.columnLeft}>
-                      <FairPriceCard pricesList={marketPrices} />
-                      <BatchCard batch={primaryBatch} onTrackClick={() => setActiveTab('track')} />
+                      <QuickActions
+                        onCreateBatchClick={() => handleTabChange('create-batch')}
+                        onViewPricesClick={() => handleTabChange('prices')}
+                        onCompareOffersClick={() => handleTabChange('offers')}
+                        onTrackProduceClick={() => handleTabChange('track')}
+                      />
+
+                      <FairPriceCard
+                        pricesList={marketPrices}
+                        onViewAllClick={() => handleTabChange('prices')}
+                      />
+
+                      <BatchCard
+                        batch={primaryBatch}
+                        onTrackClick={() => handleTabChange('track')}
+                      />
                     </div>
 
                     {/* Right Column */}
@@ -246,12 +288,37 @@ export default function FarmerDashboard({ onNavigate }) {
                       <OfferCard
                         offer={topOffer}
                         totalOffersCount={offers.length}
-                        onViewOffersClick={() => setActiveTab('offers')}
+                        onViewOffersClick={() => handleTabChange('offers')}
                       />
                       <RecentActivity />
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* TAB: CREATE NEW BATCH */}
+              {activeTab === 'create-batch' && (
+                <CreateBatchPage
+                  onBatchCreated={handleBatchCreated}
+                  onNavigateView={handleNavigateSubView}
+                />
+              )}
+
+              {/* TAB: BATCH QR CODE VIEW */}
+              {activeTab === 'batch-qr' && (
+                <BatchQrView
+                  batch={subViewData?.batch || primaryBatch}
+                  onNavigateView={handleNavigateSubView}
+                />
+              )}
+
+              {/* TAB: BATCH DETAILS VIEW */}
+              {activeTab === 'batch-details' && (
+                <BatchDetailsView
+                  batchId={subViewData?.batchId || primaryBatch?.batchId}
+                  batch={subViewData?.batch}
+                  onNavigateView={handleNavigateSubView}
+                />
               )}
 
               {/* TAB: MY BATCHES */}
@@ -263,39 +330,38 @@ export default function FarmerDashboard({ onNavigate }) {
                       <p className={styles.tabSubtitle}>Manage and track all registered harvest batches</p>
                     </div>
                     <button
-                      onClick={() => setIsCreateModalOpen(true)}
+                      onClick={() => handleTabChange('create-batch')}
                       className={styles.primaryActionBtn}
                     >
-                      <Plus size={18} /> + Create New Batch
+                      <Plus size={18} /> Create New Batch
                     </button>
                   </div>
 
-                  <div className={styles.batchesListGrid}>
-                    {batches.map((b) => (
-                      <div key={b.batchId} className={styles.batchItemCard}>
-                        <div className={styles.batchCardHead}>
-                          <div>
-                            <span className={styles.batchTag}>{b.batchId}</span>
-                            <h3 className={styles.batchTitle}>{b.crop} Harvest</h3>
-                          </div>
-                          <span className={styles.statusPill}>{b.status}</span>
-                        </div>
-
-                        <div className={styles.batchInfoGrid}>
-                          <div>Quantity: <strong>{b.quantity} {b.unit || 'kg'}</strong></div>
-                          <div>Quality: <strong>{b.quality}</strong></div>
-                          <div>Harvested: <strong>{b.harvestDate || '2026-08-10'}</strong></div>
-                        </div>
-
-                        <button
-                          onClick={() => setActiveTab('track')}
-                          className={styles.secondaryBtn}
-                        >
-                          Track Verified Journey
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                  {batches.length === 0 ? (
+                    <div className={styles.emptyState}>
+                      <Package size={48} className={styles.emptyIcon} />
+                      <h3 className={styles.emptyTitle}>No produce batches yet</h3>
+                      <p className={styles.emptyDesc}>
+                        Create your first batch to start tracking your produce.
+                      </p>
+                      <button
+                        onClick={() => handleTabChange('create-batch')}
+                        className={styles.primaryActionBtn}
+                      >
+                        <Plus size={18} /> Create New Batch
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.batchesListGrid}>
+                      {batches.map((b) => (
+                        <BatchCard
+                          key={b.batchId}
+                          batch={b}
+                          onTrackClick={(batchId) => handleNavigateSubView('batch-details', { batchId, batch: b })}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -334,7 +400,10 @@ export default function FarmerDashboard({ onNavigate }) {
                       <p className={styles.tabSubtitle}>Verified farm-to-market chain traceability</p>
                     </div>
                   </div>
-                  <BatchCard batch={primaryBatch} onTrackClick={() => {}} />
+                  <BatchCard
+                    batch={primaryBatch}
+                    onTrackClick={(batchId) => handleNavigateSubView('batch-details', { batchId, batch: primaryBatch })}
+                  />
                 </div>
               )}
 
@@ -353,42 +422,18 @@ export default function FarmerDashboard({ onNavigate }) {
 
               {/* TAB: PROFILE & SETTINGS */}
               {(activeTab === 'profile' || activeTab === 'settings') && (
-                <div className={styles.tabSection}>
-                  <div className={styles.tabHeaderRow}>
-                    <div>
-                      <h2 className={styles.tabTitle}>Farmer Profile</h2>
-                      <p className={styles.tabSubtitle}>Manage your personal and farm details</p>
-                    </div>
-                  </div>
-
-                  <div className={styles.profileCard}>
-                    <div className={styles.profileHead}>
-                      <div className={styles.avatarCircle}>
-                        {farmerProfile.name[0]}
-                      </div>
-                      <div>
-                        <h3 className={styles.profileName}>{farmerProfile.name}</h3>
-                        <p className={styles.profileSub}>{farmerProfile.location}</p>
-                      </div>
-                    </div>
-
-                    <div className={styles.profileGrid}>
-                      <div>Farmer ID: <strong>{farmerProfile.farmerId}</strong></div>
-                      <div>Phone: <strong>{farmerProfile.phone}</strong></div>
-                      <div>Primary Crop: <strong>{farmerProfile.primaryCrop}</strong></div>
-                      <div>Farm Size: <strong>{farmerProfile.farmSize}</strong></div>
-                      <div>Rating: <strong>{farmerProfile.rating} ★</strong></div>
-                      <div>Batches Sold: <strong>{farmerProfile.totalBatchesSold}</strong></div>
-                    </div>
-                  </div>
-                </div>
+                <SettingsView
+                  farmerProfile={farmerProfile}
+                  onProfileUpdated={handleProfileUpdated}
+                  onLogout={handleLogout}
+                />
               )}
             </>
           )}
         </main>
 
         {/* Mobile Bottom Navigation */}
-        <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+        <MobileBottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
       {/* Create Batch Modal */}

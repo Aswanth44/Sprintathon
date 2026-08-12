@@ -5,31 +5,37 @@
 
 export const MOCK_FARMER_PROFILE = {
   name: 'Aswanth',
-  location: 'Coimbatore, Tamil Nadu',
+  village: 'Coimbatore',
   district: 'Coimbatore',
   state: 'Tamil Nadu',
+  location: 'Coimbatore, Tamil Nadu',
   farmerId: 'FARM-TN-3789',
   status: 'Verified Farmer',
   phone: '+91 98765 43210',
   email: 'aswanth@uzhavarsetu.in',
   farmSize: '5.5 Acres',
   primaryCrop: 'Tomato',
+  primaryCrops: ['Tomato', 'Onion', 'Coconut'],
   rating: 4.9,
   totalBatchesSold: 24,
 }
 
+// DEMO API
+// These summary values will come from the Spring Boot dashboard API.
+// FUTURE ENDPOINT:
+// GET /api/farmer/dashboard
 export const MOCK_DASHBOARD_SUMMARY = {
-  farmer: {
-    name: 'Aswanth',
-    location: 'Coimbatore, Tamil Nadu',
-    status: 'Verified Farmer',
-  },
+  farmer: MOCK_FARMER_PROFILE,
   summary: {
-    marketPrice: 42,
-    activeBatches: 3,
-    buyerOffers: 5,
-    inTransit: 2,
-    priceChangePercentage: 6.2,
+    inTransitAndStored: 5,
+    pendingReview: 2,
+    highestBuyerBid: 44,
+    highestBuyerBidUnit: 'kg',
+    highestBuyerBidCrop: 'Tomato',
+    mandiIndex: 42,
+    mandiIndexUnit: 'kg',
+    mandiIndexCrop: 'Tomato',
+    mandiIndexLocation: 'Coimbatore',
   },
   fairPrice: {
     crop: 'Tomato',

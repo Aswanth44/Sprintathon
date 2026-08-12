@@ -34,6 +34,7 @@
     box-shadow var(--transition-base),
     background-color var(--transition-base);
   outline: none;
+  appearance: none;
   -webkit-appearance: none;
 }
 
@@ -223,8 +224,9 @@
 
 /* ── Mobile touch targets ─────────────────────────────────── */
 @media (max-width: 480px) {
-  .fieldInput { height: 52px; font-size: var(--text-md); }
-  .submitBtn  { height: 56px; font-size: var(--text-md); }
+  .fieldInput { height: 42px; font-size: var(--text-md); }
+  .submitBtn  { height: 38px; font-size: var(--text-md); }
   .checkbox   { width: 20px; height: 20px; }
   .checkboxText, .forgotLink { font-size: var(--text-base); }
+  
 }

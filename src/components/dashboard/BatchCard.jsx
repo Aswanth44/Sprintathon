@@ -1,4 +1,5 @@
 import { Package, Truck, ArrowRight, Check } from 'lucide-react'
+import { formatBatchStatus, formatDate } from '../../utils/formatters'
 import styles from './BatchCard.module.css'
 
 const DEFAULT_STAGES = [
@@ -12,6 +13,7 @@ const DEFAULT_STAGES = [
 /**
  * Active Produce Batch Card Component
  * Receives batch object from batchApi service
+ *
  * @param {{ batch?: any, onTrackClick?: (batchId: string) => void }} props
  */
 export default function BatchCard({ batch: inputBatch, onTrackClick }) {
@@ -21,27 +23,29 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
     quantity: '500 kg',
     quality: 'Grade A',
     status: 'IN_TRANSIT',
-    harvestDate: 'Aug 10, 2026',
+    harvestDate: '2026-08-10',
     stages: DEFAULT_STAGES,
   }
 
   const stages = batch.stages || DEFAULT_STAGES
   const displayQuantity = typeof batch.quantity === 'number' ? `${batch.quantity} ${batch.unit || 'kg'}` : batch.quantity
+  const displayStatus   = formatBatchStatus(batch.status)
+  const displayDate     = formatDate(batch.harvestDate)
 
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <div className={styles.headerTitleWrap}>
           <div className={styles.iconWrap}>
-            <Package size={20} />
+            <Package size={18} />
           </div>
           <div>
-            <h2 className={styles.cardTitle}>My Active Produce</h2>
+            <h2 className={styles.cardTitle}>{batch.crop} Harvest</h2>
             <p className={styles.batchIdCode}>{batch.batchId}</p>
           </div>
         </div>
         <span className={styles.statusBadge}>
-          <Truck size={14} /> {batch.status || 'IN_TRANSIT'}
+          <span className={styles.statusDot} /> {displayStatus}
         </span>
       </div>
 
@@ -60,7 +64,7 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
         </div>
         <div className={styles.detailItem}>
           <span className={styles.detailLabel}>Harvest Date</span>
-          <span className={styles.detailValue}>{batch.harvestDate || '2026-08-10'}</span>
+          <span className={styles.detailValue}>{displayDate}</span>
         </div>
       </div>
 
@@ -75,9 +79,9 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
             >
               <div className={styles.stepCircle}>
                 {stage.completed && !stage.isCurrent ? (
-                  <Check size={12} className={styles.checkIcon} />
+                  <Check size={11} className={styles.checkIcon} />
                 ) : stage.isCurrent ? (
-                  <Truck size={13} className={styles.currentIcon} />
+                  <Truck size={12} className={styles.currentIcon} />
                 ) : (
                   <span className={styles.stepDot} />
                 )}
@@ -95,7 +99,7 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
         onClick={() => onTrackClick && onTrackClick(batch.batchId)}
         className={styles.trackBtn}
       >
-        Track Batch <ArrowRight size={16} />
+        Track Verified Journey <ArrowRight size={15} />
       </button>
     </div>
   )

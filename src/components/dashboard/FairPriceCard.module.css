@@ -7,6 +7,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .header {
@@ -51,6 +54,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  max-width: 100%;
 }
 
 .cropSelect {
@@ -64,6 +68,8 @@
   appearance: none;
   cursor: pointer;
   outline: none;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .selectChevron {
@@ -86,6 +92,7 @@
   gap: var(--space-4);
   padding-bottom: var(--space-3);
   border-bottom: 1px dashed var(--color-border-light);
+  flex-wrap: wrap;
 }
 
 .priceLabel {
@@ -135,4 +142,63 @@
 
 .chartWrap {
   padding-top: var(--space-2);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--space-5);
+  }
+
+  .priceValue {
+    font-size: var(--text-3xl);
+  }
+
+  .trendBadge {
+    font-size: 0.8rem;
+  }
+
+  .rangeText {
+    font-size: var(--text-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: var(--space-4);
+  }
+
+  .selectWrap,
+  .cropSelect {
+    width: 100%;
+  }
+
+  .priceValue {
+    font-size: var(--text-2xl);
+  }
+
+  .title {
+    font-size: var(--text-lg);
+  }
+
+  .subtitle,
+  .rangeText {
+    font-size: var(--text-sm);
+  }
+
+  .trendBadge {
+    font-size: 0.72rem;
+    padding: 4px 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    padding: var(--space-3);
+  }
+  .priceValue {
+    font-size: var(--text-xl);
+  }
 }

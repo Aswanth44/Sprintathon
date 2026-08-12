@@ -25,30 +25,41 @@ export const NAV_ITEMS = [
 ]
 
 /**
- * Desktop & Tablet Sidebar component
- * @param {{ activeTab: string, onTabChange: (id: string) => void, onLogout: () => void, isOpenMobile?: boolean, onCloseMobile?: () => void }} props
+ * Desktop & Mobile Sidebar Component
+ * Supports both `isOpen`/`onClose` and `isOpenMobile`/`onCloseMobile` props.
  */
-export default function Sidebar({ activeTab, onTabChange, onLogout, isOpenMobile, onCloseMobile }) {
+export default function Sidebar({
+  activeTab,
+  onTabChange,
+  onLogout,
+  isOpen,
+  onClose,
+  isOpenMobile,
+  onCloseMobile,
+}) {
+  const isMobileOpen = isOpen !== undefined ? isOpen : isOpenMobile
+  const handleClose = onClose || onCloseMobile
+
   return (
     <>
       {/* Mobile Drawer Overlay */}
-      {isOpenMobile && (
+      {isMobileOpen && (
         <div
           className={styles.overlay}
-          onClick={onCloseMobile}
+          onClick={handleClose}
           aria-hidden="true"
         />
       )}
 
-      <aside className={`${styles.sidebar} ${isOpenMobile ? styles.sidebarMobileOpen : ''}`}>
+      <aside className={`${styles.sidebar} ${isMobileOpen ? styles.sidebarMobileOpen : ''}`}>
         {/* Header with Logo & Mobile Close */}
         <div className={styles.sidebarHeader}>
           <Logo size="md" />
-          {isOpenMobile && (
+          {isMobileOpen && (
             <button
-              onClick={onCloseMobile}
+              onClick={handleClose}
               className={styles.closeBtn}
-              aria-label="Close Sidebar"
+              aria-label="Close Navigation Menu"
             >
               <X size={20} />
             </button>
@@ -67,7 +78,7 @@ export default function Sidebar({ activeTab, onTabChange, onLogout, isOpenMobile
                   <button
                     onClick={() => {
                       onTabChange(item.id)
-                      if (onCloseMobile) onCloseMobile()
+                      if (handleClose) handleClose()
                     }}
                     className={`${styles.navBtn} ${isActive ? styles.navBtnActive : ''}`}
                     aria-current={isActive ? 'page' : undefined}
@@ -81,7 +92,7 @@ export default function Sidebar({ activeTab, onTabChange, onLogout, isOpenMobile
                     )}
                   </button>
                 </li>
-              )
+              );
             })}
           </ul>
         </nav>

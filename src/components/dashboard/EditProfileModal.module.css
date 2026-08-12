@@ -1,0 +1,132 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal, 200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalHeader {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-cream);
+}
+
+.headerTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.headerIcon {
+  color: var(--color-green-mid);
+}
+
+.modalTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: var(--color-green-deep);
+  background: var(--color-green-pale);
+}
+
+.form {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.btnRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.cancelBtn {
+  height: 48px;
+  padding: 0 var(--space-5);
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.errorText {
+  color: var(--color-error);
+  font-size: var(--text-xs);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    max-width: 100%;
+    border-radius: var(--radius-xl);
+  }
+  .modalHeader, .form {
+    padding: var(--space-4);
+  }
+}

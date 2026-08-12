@@ -10,15 +10,41 @@ const ICON_MAP = {
 
 /**
  * Summary Metric Card
- * @param {{ title: string, value: string, subtext: string, trend: string, trendPositive?: boolean, icon: string, accentColor?: string, bgColor?: string }} props
+ * Displays Title (top), Large Primary Value (middle), and Supporting Text (bottom).
+ *
+ * @param {{
+ *   title?: string,
+ *   label?: string,
+ *   value: string | number,
+ *   subtext?: string,
+ *   supportingText?: string,
+ *   trend?: string,
+ *   trendPositive?: boolean,
+ *   icon?: string,
+ *   accentColor?: string,
+ *   bgColor?: string
+ * }} props
  */
-export default function SummaryCard({ title, value, subtext, trend, trendPositive = true, icon, accentColor, bgColor }) {
-  const IconComponent = ICON_MAP[icon] || TrendingUp
+export default function SummaryCard({
+  title,
+  label,
+  value,
+  subtext,
+  supportingText,
+  trend,
+  trendPositive = true,
+  icon = 'TrendingUp',
+  accentColor,
+  bgColor,
+}) {
+  const displayTitle   = title || label || 'Summary'
+  const displaySubtext = subtext || supportingText || ''
+  const IconComponent  = ICON_MAP[icon] || TrendingUp
 
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
-        <span className={styles.cardTitle}>{title}</span>
+        <span className={styles.cardTitle}>{displayTitle}</span>
         <div
           className={styles.iconWrap}
           style={{
@@ -26,7 +52,7 @@ export default function SummaryCard({ title, value, subtext, trend, trendPositiv
             color: accentColor || 'var(--color-green-deep)',
           }}
         >
-          <IconComponent size={20} aria-hidden="true" />
+          <IconComponent size={18} aria-hidden="true" />
         </div>
       </div>
 
@@ -41,7 +67,7 @@ export default function SummaryCard({ title, value, subtext, trend, trendPositiv
             </span>
           )}
         </div>
-        <p className={styles.subtext}>{subtext}</p>
+        {displaySubtext && <p className={styles.subtext}>{displaySubtext}</p>}
       </div>
     </div>
   )
