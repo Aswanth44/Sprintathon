@@ -1,27 +1,47 @@
-import { request } from './apiClient'
+import { delay, request } from './apiClient'
 import { getPersistedOffers, savePersistedOffers } from '../mock/mockOfferData'
 import { createPurchaseFromOffer } from './purchaseApi'
 import { addNotification } from './notificationApi'
 
 /**
- * GET /api/farmer/offers
- * Fetches all buyer offers or filters by batchId.
+ * // SPRING BOOT ENDPOINT: GET /api/batches/{batchId}/offers
+ * // Controller: OfferController.getOffers(String batchId)
+ * // Request DTO: { batchId: String }
+ * // Response DTO: Offer[]
+ * // Real implementation: queries PostgreSQL via OfferRepository.
  */
-export async function getOffers(batchId) {
+export async function getBatchOffers(batchId) {
+  await delay(250)
   const allOffers = getPersistedOffers()
   const filtered = batchId ? allOffers.filter((o) => o.batchId === batchId) : allOffers
-  return request('/farmer/offers', { method: 'GET' }, filtered)
+  return request(`/batches/${batchId}/offers`, { method: 'GET' }, filtered)
 }
 
 /**
- * POST /api/buyer/offers
- * Creates a new purchase offer for a farmer batch and notifies the farmer.
+ * // SPRING BOOT ENDPOINT: GET /api/offers
+ * // Controller: OfferController.getAllOffers()
+ * // Request DTO: none
+ * // Response DTO: Offer[]
+ * // Real implementation: queries PostgreSQL via OfferRepository.
+ */
+export async function getOffers(batchId) {
+  return getBatchOffers(batchId)
+}
+
+/**
+ * // SPRING BOOT ENDPOINT: POST /api/buyer/offers
+ * // Controller: OfferController.createOffer(CreateOfferRequest request)
+ * // Request DTO: { batchId: String, crop: String, quantity: Number, offeredPrice: Number, transportCost: Number }
+ * // Response DTO: Offer
+ * // Real implementation: creates purchase offer in PostgreSQL and triggers notification.
  */
 export async function createOffer(offerData) {
+  await delay(300)
   const allOffers = getPersistedOffers()
   const offerId = `OFF-00${allOffers.length + 1}`
 
   const newOffer = {
+    id: offerId,
     offerId,
     batchId: offerData.batchId,
     crop: offerData.crop || 'Tomato',
@@ -30,9 +50,11 @@ export async function createOffer(offerData) {
     farmerName: offerData.farmerName || 'Aswanth Kumar',
     farmerId: offerData.farmerId || 'UZH-FMR-000128',
     farmerLocation: offerData.farmerLocation || 'Pollachi, Coimbatore',
-    buyerName: offerData.buyerName || 'FreshMart Foods',
+    buyerName: offerData.buyerName || 'GreenFresh Traders',
+    buyerId: offerData.buyerId || 'BUYER-001',
     buyerLocation: offerData.buyerLocation || 'Coimbatore Central',
     marketPrice: Number(offerData.marketPrice) || 42,
+    offerPrice: Number(offerData.offeredPrice),
     offeredPrice: Number(offerData.offeredPrice),
     transportCost: Number(offerData.transportCost) || 0,
     netPayout: Number(offerData.offeredPrice) - (Number(offerData.transportCost) || 0),
@@ -47,7 +69,6 @@ export async function createOffer(offerData) {
   const updatedOffers = [newOffer, ...allOffers]
   savePersistedOffers(updatedOffers)
 
-  // Notify Farmer of new buyer offer
   addNotification({
     recipientRole: 'farmer',
     type: 'offer_received',
@@ -66,15 +87,19 @@ export async function createOffer(offerData) {
 }
 
 /**
- * PUT /api/farmer/offers/:offerId/status
- * Updates offer status (ACCEPTED, REJECTED) and notifies buyer.
+ * // SPRING BOOT ENDPOINT: PUT /api/farmer/offers/{offerId}/status
+ * // Controller: OfferController.updateStatus(String offerId, UpdateStatusRequest request)
+ * // Request DTO: { status: "ACCEPTED" | "REJECTED" }
+ * // Response DTO: Offer
+ * // Real implementation: updates offer status in PostgreSQL and generates purchase record if accepted.
  */
 export async function updateOfferStatus(offerId, newStatus) {
+  await delay(250)
   const allOffers = getPersistedOffers()
   let targetOffer = null
 
   const updatedOffers = allOffers.map((o) => {
-    if (o.offerId === offerId) {
+    if (o.offerId === offerId || o.id === offerId) {
       targetOffer = {
         ...o,
         status: newStatus,
@@ -121,15 +146,19 @@ export async function updateOfferStatus(offerId, newStatus) {
 }
 
 /**
- * PUT /api/farmer/offers/:offerId/counter
- * Submits a counter offer from farmer to buyer and notifies buyer.
+ * // SPRING BOOT ENDPOINT: PUT /api/farmer/offers/{offerId}/counter
+ * // Controller: OfferController.counterOffer(String offerId, CounterOfferRequest request)
+ * // Request DTO: { counterPrice: Number, quantity: Number, message: String }
+ * // Response DTO: Offer
+ * // Real implementation: submits farmer counter offer and notifies buyer.
  */
 export async function counterOffer(offerId, counterData) {
+  await delay(250)
   const allOffers = getPersistedOffers()
   let targetOffer = null
 
   const updatedOffers = allOffers.map((o) => {
-    if (o.offerId === offerId) {
+    if (o.offerId === offerId || o.id === offerId) {
       const counterPrice = Number(counterData.counterPrice)
       const transportCost = Number(o.transportCost || 0)
       const counterNetPayout = counterPrice - transportCost
@@ -175,16 +204,20 @@ export async function counterOffer(offerId, counterData) {
 }
 
 /**
- * PUT /api/buyer/offers/:offerId/respond-counter
- * Buyer accepts or rejects farmer's counter offer and notifies farmer.
+ * // SPRING BOOT ENDPOINT: PUT /api/buyer/offers/{offerId}/respond-counter
+ * // Controller: OfferController.respondCounter(String offerId, RespondCounterRequest request)
+ * // Request DTO: { action: "accept" | "reject" }
+ * // Response DTO: Offer
+ * // Real implementation: processes buyer response to counter offer.
  */
 export async function respondToCounter(offerId, action) {
+  await delay(250)
   const status = action === 'accept' ? 'ACCEPTED' : 'REJECTED'
   const allOffers = getPersistedOffers()
   let targetOffer = null
 
   const updatedOffers = allOffers.map((o) => {
-    if (o.offerId === offerId) {
+    if (o.offerId === offerId || o.id === offerId) {
       targetOffer = {
         ...o,
         status,

@@ -21,14 +21,12 @@
 }
 
 .closeBtn {
+  display: none;
   background: transparent;
   border: none;
   color: var(--color-text-muted);
   cursor: pointer;
   padding: var(--space-1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: var(--radius-sm);
 }
 
@@ -147,6 +145,12 @@
 
 /* ── Mobile Drawer ─────────────────────────────────────────── */
 @media (max-width: 1024px) {
+  .closeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .sidebar {
     transform: translateX(-100%);
   }

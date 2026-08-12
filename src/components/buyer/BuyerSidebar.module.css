@@ -44,11 +44,16 @@
 }
 
 .closeBtn {
+  display: none;
   background: transparent;
   border: none;
   color: var(--color-text-secondary);
   cursor: pointer;
   padding: 4px;
+}
+
+.closeBtn:hover {
+  color: var(--color-green-deep);
 }
 
 .navGroup {
@@ -132,6 +137,11 @@
 }
 
 @media (max-width: 1024px) {
+  .closeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .sidebar {
     transform: translateX(-100%);
     transition: transform 0.25s ease;
