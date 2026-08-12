@@ -22,11 +22,11 @@ export const MOCK_BATCHES = [
     harvestDate: '2026-08-10',
     createdAt: '2026-08-10T08:30:00Z',
     stages: [
-      { key: 'farm',      label: 'Farm Harvest',    desc: 'Harvested at Pollachi Farm', completed: true  },
+      { key: 'farm',      label: 'Farm',            desc: 'Harvested at Pollachi Farm', completed: true  },
       { key: 'pickup',    label: 'Pickup',          desc: 'Agri Logistics Loaded',      completed: true  },
       { key: 'warehouse', label: 'Warehouse',       desc: 'Cold Storage Verified',      completed: true  },
       { key: 'transport', label: 'Transport',       desc: 'In Transit to Hub',          completed: true, isCurrent: true },
-      { key: 'buyer',     label: 'Buyer Delivery',  desc: 'Direct Retail Delivery',     completed: false },
+      { key: 'buyer',     label: 'Delivery',        desc: 'Direct Retail Delivery',     completed: false },
     ],
   },
   {
@@ -47,11 +47,11 @@ export const MOCK_BATCHES = [
     harvestDate: '2026-08-09',
     createdAt: '2026-08-09T10:15:00Z',
     stages: [
-      { key: 'farm',      label: 'Farm Harvest',    desc: 'Harvested at Erode Farm',    completed: true  },
+      { key: 'farm',      label: 'Farm',            desc: 'Harvested at Erode Farm',    completed: true  },
       { key: 'pickup',    label: 'Pickup',          desc: 'Agri Logistics Picked Up',   completed: true  },
       { key: 'warehouse', label: 'Warehouse',       desc: 'Stored in Cold Climate Hub', completed: true, isCurrent: true },
       { key: 'transport', label: 'Transport',       desc: 'Transport Pending',          completed: false },
-      { key: 'buyer',     label: 'Buyer Delivery',  desc: 'Direct Retail Delivery',     completed: false },
+      { key: 'buyer',     label: 'Delivery',        desc: 'Direct Retail Delivery',     completed: false },
     ],
   },
   {
@@ -72,11 +72,11 @@ export const MOCK_BATCHES = [
     harvestDate: '2026-08-11',
     createdAt: '2026-08-11T07:00:00Z',
     stages: [
-      { key: 'farm',      label: 'Farm Harvest',    desc: 'Harvested in Nilgiris',      completed: true  },
+      { key: 'farm',      label: 'Farm',            desc: 'Harvested in Nilgiris',      completed: true  },
       { key: 'pickup',    label: 'Pickup',          desc: 'Scheduled for Pick Up',      completed: true, isCurrent: true },
       { key: 'warehouse', label: 'Warehouse',       desc: 'Warehouse Storage Pending',  completed: false },
       { key: 'transport', label: 'Transport',       desc: 'Logistics Transport Pending', completed: false },
-      { key: 'buyer',     label: 'Buyer Delivery',  desc: 'Direct Retail Delivery',     completed: false },
+      { key: 'buyer',     label: 'Delivery',        desc: 'Direct Retail Delivery',     completed: false },
     ],
   },
 ]

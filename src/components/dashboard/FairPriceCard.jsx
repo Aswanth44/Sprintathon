@@ -1,17 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TrendingUp, ShieldCheck, ChevronDown } from 'lucide-react'
+import { getMarketPrice } from '../../api/priceApi'
 import PriceChart from './PriceChart'
 import styles from './FairPriceCard.module.css'
 
 /**
  * Today's Fair Price Card Component
- * Receives market prices list from marketApi service
+ * Consumes official Government OGD / AGMARKNET market prices service with fallback.
  * 
- * // TODO: Replace demo market-price data with backend API response.
+ * // TODO: Replace mock data source with live Spring Boot endpoint GET /api/price/{cropName}
  * @param {{ pricesList?: Array<any> }} props
  */
 export default function FairPriceCard({ pricesList = [] }) {
   const [selectedCrop, setSelectedCrop] = useState('Tomato')
+  const [marketData, setMarketData]     = useState(null)
+
+  useEffect(() => {
+    async function loadPrice() {
+      try {
+        const res = await getMarketPrice(selectedCrop, 'Coimbatore')
+        setMarketData(res)
+      } catch (err) {
+        console.error('Failed to load market price benchmark:', err)
+      }
+    }
+    loadPrice()
+  }, [selectedCrop])
 
   const priceArray = Array.isArray(pricesList)
     ? pricesList
@@ -19,18 +33,19 @@ export default function FairPriceCard({ pricesList = [] }) {
     ? [pricesList]
     : []
 
-  // Find selected crop or fallback to first
   const activeCropData =
     priceArray.find((p) => p && p.crop && p.crop.toLowerCase() === selectedCrop.toLowerCase()) ||
     priceArray[0] ||
     {}
 
-  // Safely extract price properties supporting multiple property names across demo datasets
-  const displayPrice = activeCropData.currentPrice ?? activeCropData.price ?? activeCropData.mandiBenchmark ?? 42
-  const minPrice = activeCropData.minimumPrice ?? activeCropData.minPrice ?? activeCropData.min ?? 38
-  const maxPrice = activeCropData.maximumPrice ?? activeCropData.maxPrice ?? activeCropData.max ?? 46
-  const changePct = activeCropData.changePercent ?? activeCropData.changePercentage ?? activeCropData.change ?? 6.2
-  const unitText = activeCropData.unit || 'kg'
+  const displayPrice = marketData?.modalPricePerKg ?? marketData?.marketPrice ?? activeCropData.currentPrice ?? 42
+  const minPrice = marketData?.minPricePerKg ?? activeCropData.minimumPrice ?? 38
+  const maxPrice = marketData?.maxPricePerKg ?? activeCropData.maximumPrice ?? 46
+  const sourceName = marketData?.source || 'Government OGD / AGMARKNET'
+  const isLive = marketData?.isLive ?? false
+  const changePct = activeCropData.changePercent ?? 4.8
+  const unitText = 'kg'
+
   const historyData = activeCropData.history || [
     { day: 'Mon', price: minPrice },
     { day: 'Tue', price: minPrice + 1 },
@@ -48,7 +63,9 @@ export default function FairPriceCard({ pricesList = [] }) {
           </div>
           <div>
             <h2 className={styles.title}>Today&apos;s Fair Price</h2>
-            <p className={styles.subtitle}>Verified Govt &amp; Mandi Benchmark</p>
+            <p className={styles.subtitle}>
+              {sourceName} • {isLive ? '✓ LIVE AGMARKNET' : 'DEMO BENCHMARK'}
+            </p>
           </div>
         </div>
 
@@ -60,20 +77,11 @@ export default function FairPriceCard({ pricesList = [] }) {
             className={styles.cropSelect}
             aria-label="Select Crop"
           >
-            {priceArray.length > 0 ? (
-              priceArray.map((p) => (
-                <option key={p.crop || 'crop'} value={p.crop || 'Tomato'}>
-                  {p.crop || 'Tomato'} ({p.locationName || p.district || 'Mandi'})
-                </option>
-              ))
-            ) : (
-              <>
-                <option value="Tomato">Tomato (Grade A)</option>
-                <option value="Onion">Onion (Grade A)</option>
-                <option value="Potato">Potato (Grade B)</option>
-                <option value="Rice">Rice (Grade A)</option>
-              </>
-            )}
+            <option value="Tomato">Tomato (Coimbatore Mandi)</option>
+            <option value="Onion">Onion (Coimbatore Mandi)</option>
+            <option value="Potato">Potato (Coimbatore Mandi)</option>
+            <option value="Coconut">Coconut (Pollachi Mandi)</option>
+            <option value="Banana">Banana (Coimbatore Mandi)</option>
           </select>
           <ChevronDown size={14} className={styles.selectChevron} />
         </div>
@@ -82,14 +90,14 @@ export default function FairPriceCard({ pricesList = [] }) {
       <div className={styles.body}>
         <div className={styles.priceRow}>
           <div>
-            <span className={styles.priceLabel}>Market Benchmark</span>
+            <span className={styles.priceLabel}>Government Mandi Benchmark</span>
             <div className={styles.priceValue}>
               ₹{displayPrice}<span className={styles.unit}>/{unitText}</span>
             </div>
           </div>
           <div className={styles.trendInfo}>
             <span className={styles.trendBadge}>
-              <TrendingUp size={14} /> {changePct >= 0 ? `+${changePct}` : changePct}%
+              <TrendingUp size={14} /> +{changePct}%
             </span>
             <span className={styles.rangeText}>
               Range: ₹{minPrice} - ₹{maxPrice}/{unitText}

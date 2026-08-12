@@ -220,9 +220,11 @@
   font-weight: var(--font-semibold);
   color: var(--color-text-muted);
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
   word-break: normal;
   overflow-wrap: normal;
+  line-height: 1.15;
+  max-width: 52px;
   letter-spacing: -0.02em;
 }
 

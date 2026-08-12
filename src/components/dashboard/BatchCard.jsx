@@ -86,7 +86,9 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
                   <span className={styles.stepDot} />
                 )}
               </div>
-              <span className={styles.stepLabel}>{stage.label}</span>
+              <span className={styles.stepLabel} title={stage.label}>
+                {stage.label === 'Farm Harvest' ? 'Farm' : stage.label === 'Buyer Delivery' ? 'Delivery' : stage.label}
+              </span>
               {idx < stages.length - 1 && (
                 <div className={`${styles.connectorLine} ${stage.completed ? styles.connectorDone : ''}`} />
               )}

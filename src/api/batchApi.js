@@ -84,11 +84,11 @@ export async function createBatch(batchData) {
     district: batchData.district || 'Coimbatore',
     state: batchData.state || 'Tamil Nadu',
     stages: [
-      { key: 'farm',      label: 'Farm Harvest',    desc: 'Harvest Registered', completed: true, isCurrent: true },
+      { key: 'farm',      label: 'Farm',            desc: 'Harvest Registered', completed: true, isCurrent: true },
       { key: 'pickup',    label: 'Pickup',          desc: 'Pending Pickup',     completed: false },
       { key: 'warehouse', label: 'Warehouse',       desc: 'Pending Storage',    completed: false },
       { key: 'transport', label: 'Transport',       desc: 'Pending Transport',  completed: false },
-      { key: 'buyer',     label: 'Buyer Delivery',  desc: 'Pending Delivery',   completed: false },
+      { key: 'buyer',     label: 'Delivery',        desc: 'Pending Delivery',   completed: false },
     ],
   }
 
