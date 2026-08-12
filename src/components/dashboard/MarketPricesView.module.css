@@ -1,0 +1,1022 @@
+/* Market Prices View — Agricultural Intelligence Styling */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Header Section ─────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.headerTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.demoBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--color-green-pale);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-green-deep);
+}
+
+.demoDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-green-mid);
+}
+
+.demoBadgeText {
+  font-weight: var(--font-bold);
+}
+
+.demoNote {
+  color: var(--color-text-muted);
+}
+
+/* ── Selectors Bar ──────────────────────────────────────────── */
+.selectorBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.selectorGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.selectLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  white-space: nowrap;
+}
+
+.labelIcon {
+  color: var(--color-green-mid);
+}
+
+.selectInput {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-base);
+}
+
+.selectInput:focus {
+  border-color: var(--color-green-deep);
+  box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+}
+
+.updatingBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-green-mid);
+  margin-left: auto;
+}
+
+.spinner {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Content Container & Cards ──────────────────────────────── */
+.dashboardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.cardHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.cardCategory {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.updateTag {
+  font-size: 0.72rem;
+  font-weight: var(--font-bold);
+  color: var(--color-green-mid);
+  background: var(--color-green-pale);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  margin: 0;
+}
+
+.headingIcon {
+  color: var(--color-green-mid);
+}
+
+.sectionSub {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin: 2px 0 0 0;
+}
+
+/* ── Snapshot Banner ────────────────────────────────────────── */
+.snapshotBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-6);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.snapshotItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.snapshotLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.snapshotVal {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+}
+
+.snapshotValHighlight {
+  font-size: var(--text-xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-gold-light);
+}
+
+.snapshotDivider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Top Grid (Current Price & Price Range) ─────────────────── */
+.topCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.priceHeroWrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.priceDisplay {
+  display: flex;
+  align-items: baseline;
+  color: var(--color-green-deep);
+}
+
+.currencySymbol {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  margin-right: 2px;
+}
+
+.priceNum {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.unitText {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+  margin-left: 2px;
+}
+
+.changeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+}
+
+.changePos {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.changeNeg {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.metaSubtext {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ── Price Range Card ───────────────────────────────────────── */
+.rangeSub {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.rangeValuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.rangeBox {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.rangeBoxAvg {
+  background: var(--color-green-pale);
+  border-color: var(--color-border-mid);
+}
+
+.rangeBoxLabel {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  font-weight: var(--font-bold);
+}
+
+.rangeBoxPrice {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.rangeBoxPriceAvg {
+  font-size: var(--text-lg);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+}
+
+.rangeBarTrack {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.rangeBarFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #81c784 0%, #2e7d32 100%);
+  border-radius: 4px;
+}
+
+.rangeBarMarker {
+  position: absolute;
+  top: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-green-deep);
+  border: 2px solid var(--color-white);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(-50%);
+}
+
+/* ── 7-Day Trend Chart ──────────────────────────────────────── */
+.unitBadge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-green-mid);
+  background: var(--color-green-pale);
+  padding: 2px 8px;
+  border-radius: var(--radius-md);
+}
+
+.chartContainer {
+  width: 100%;
+  min-height: 220px;
+  margin-top: var(--space-2);
+}
+
+.chartTooltip {
+  background: var(--color-green-deep);
+  color: var(--color-white);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.tooltipDate {
+  font-size: 0.72rem;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.tooltipPrice {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-gold-light);
+  margin: 2px 0 0 0;
+}
+
+/* ── Market Benchmark Section ───────────────────────────────── */
+.demoTag {
+  font-size: 0.72rem;
+  font-weight: var(--font-semibold);
+  color: var(--color-text-muted);
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.benchmarkGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.benchmarkItem {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bmLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+}
+
+.bmVal {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+}
+
+.bmSub {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Fair Price Engine Card (Calculator) ────────────────────── */
+.engineCard {
+  border: 2px solid var(--color-border-mid);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
+}
+
+.engineBadge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  background: var(--color-green-pale);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.engineGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.engineInputsCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.inputFieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inputFieldLabel {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background: var(--color-white);
+  border: 1.5px solid var(--color-border-mid);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+  transition: all var(--transition-base);
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--color-green-deep);
+  box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+}
+
+.inputPre {
+  font-weight: var(--font-bold);
+  color: var(--color-green-mid);
+  margin-right: 4px;
+}
+
+.numInput {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  outline: none;
+}
+
+.engineResultCol {
+  background: var(--color-green-pale);
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+}
+
+.resultHeader {
+  font-size: 0.72rem;
+  font-weight: var(--font-bold);
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.formulaRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+}
+
+.formulaOp {
+  color: var(--color-green-mid);
+}
+
+.netPayoutDisplay {
+  display: flex;
+  align-items: baseline;
+  color: var(--color-green-deep);
+
+}
+
+.netCurrency {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+}
+
+.netNum {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.netUnit {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+}
+
+.assessmentBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.assessmentTitle {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+}
+
+.assessmentDesc {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── Status Badges ──────────────────────────────────────────── */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: var(--font-extrabold);
+  white-space: nowrap;
+}
+
+.badgeGood {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.badgeFair {
+  background: #eef6f2;
+  color: #1b4332;
+  border: 1px solid #c3e0d0;
+}
+
+.badgeBelow {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+/* ── Best Offer Highlight Card ──────────────────────────────── */
+.bestOfferCard {
+  border: 2px solid var(--color-border-mid);
+  background: linear-gradient(135deg, #ffffff 0%, #f5faf7 100%);
+}
+
+.bestOfferTag {
+  font-size: var(--text-xs);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  background: var(--color-gold-light);
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+}
+
+.verifiedBuyerTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-green-mid);
+}
+
+.bestOfferContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.buyerMainInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.buyerName {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+  margin: 0;
+}
+
+.pickupLoc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.bestOfferMetricsGrid {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.metricBox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricLabel {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.metricVal {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.metricValNeg {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: #c62828;
+}
+
+.metricValHighlight {
+  font-size: var(--text-lg);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+}
+
+/* ── Buyer Offer Comparison Section ────────────────────────── */
+.offerCountBadge {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  background: var(--color-green-pale);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Desktop Table View */
+.tableResponsiveWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.comparisonTable th {
+  padding: 12px 14px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+.comparisonTable td {
+  padding: 14px;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.tableBuyerCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.buyerCellName {
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+}
+
+.buyerCellSub {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.tablePriceCell {
+  font-weight: var(--font-bold);
+}
+
+.tableTransCell {
+  color: #c62828;
+}
+
+.tableNetCell {
+  font-size: var(--text-base);
+  color: var(--color-green-deep);
+}
+
+/* Mobile Stacked View (hidden on desktop) */
+.mobileOffersList {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mobileOfferCard {
+  background: var(--color-cream);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mobileCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.mobileBuyerName {
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  font-size: var(--text-sm);
+}
+
+.mobileCardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.mobileCardItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobileLabel {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.mobileVal {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+}
+
+.mobileValNeg {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: #c62828;
+}
+
+.mobileValHighlight {
+  font-size: var(--text-sm);
+  font-weight: var(--font-extrabold);
+  color: var(--color-green-deep);
+}
+
+/* ── Loading & Error States ─────────────────────────────────── */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  gap: var(--space-4);
+}
+
+.mainSpinner {
+  color: var(--color-green-mid);
+  animation: spin 1.2s linear infinite;
+}
+
+.loadingText {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+}
+
+.errorCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  text-align: center;
+  gap: var(--space-3);
+}
+
+.errorIcon {
+  color: #c62828;
+}
+
+.errorTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-green-deep);
+  margin: 0;
+}
+
+.errorText {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.retryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-green-deep);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  margin-top: var(--space-2);
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE LAYOUT (1024px, 768px, 430px, 320px)
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .topCardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .engineGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .benchmarkGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .selectorBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selectInput {
+    width: 100%;
+  }
+
+  .snapshotBanner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .snapshotDivider {
+    display: none;
+  }
+
+  .benchmarkGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bestOfferContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bestOfferMetricsGrid {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Switch table to stacked cards on mobile */
+  .tableResponsiveWrap {
+    display: none;
+  }
+
+  .mobileOffersList {
+    display: flex;
+  }
+}
+
+@media (max-width: 430px) {
+  .rangeValuesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .priceNum {
+    font-size: 2.1rem;
+  }
+
+  .netNum {
+    font-size: 2.2rem;
+  }
+}

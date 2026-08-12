@@ -6,29 +6,38 @@ import styles from './FairPriceCard.module.css'
 /**
  * Today's Fair Price Card Component
  * Receives market prices list from marketApi service
+ * 
+ * // TODO: Replace demo market-price data with backend API response.
  * @param {{ pricesList?: Array<any> }} props
  */
 export default function FairPriceCard({ pricesList = [] }) {
   const [selectedCrop, setSelectedCrop] = useState('Tomato')
 
+  const priceArray = Array.isArray(pricesList)
+    ? pricesList
+    : pricesList && typeof pricesList === 'object'
+    ? [pricesList]
+    : []
+
   // Find selected crop or fallback to first
   const activeCropData =
-    pricesList.find((p) => p.crop.toLowerCase() === selectedCrop.toLowerCase()) ||
-    pricesList[0] || {
-      crop: 'Tomato',
-      price: 42,
-      unit: 'kg',
-      minPrice: 38,
-      maxPrice: 46,
-      changePercentage: 6.2,
-      history: [
-        { day: 'Mon', price: 38 },
-        { day: 'Tue', price: 39 },
-        { day: 'Wed', price: 40 },
-        { day: 'Thu', price: 41 },
-        { day: 'Fri (Today)', price: 42 },
-      ],
-    }
+    priceArray.find((p) => p && p.crop && p.crop.toLowerCase() === selectedCrop.toLowerCase()) ||
+    priceArray[0] ||
+    {}
+
+  // Safely extract price properties supporting multiple property names across demo datasets
+  const displayPrice = activeCropData.currentPrice ?? activeCropData.price ?? activeCropData.mandiBenchmark ?? 42
+  const minPrice = activeCropData.minimumPrice ?? activeCropData.minPrice ?? activeCropData.min ?? 38
+  const maxPrice = activeCropData.maximumPrice ?? activeCropData.maxPrice ?? activeCropData.max ?? 46
+  const changePct = activeCropData.changePercent ?? activeCropData.changePercentage ?? activeCropData.change ?? 6.2
+  const unitText = activeCropData.unit || 'kg'
+  const historyData = activeCropData.history || [
+    { day: 'Mon', price: minPrice },
+    { day: 'Tue', price: minPrice + 1 },
+    { day: 'Wed', price: minPrice + 2 },
+    { day: 'Thu', price: displayPrice - 1 },
+    { day: 'Fri', price: displayPrice },
+  ]
 
   return (
     <div className={styles.card}>
@@ -51,10 +60,10 @@ export default function FairPriceCard({ pricesList = [] }) {
             className={styles.cropSelect}
             aria-label="Select Crop"
           >
-            {pricesList.length > 0 ? (
-              pricesList.map((p) => (
-                <option key={p.crop} value={p.crop}>
-                  {p.crop} ({p.district || 'Mandi'})
+            {priceArray.length > 0 ? (
+              priceArray.map((p) => (
+                <option key={p.crop || 'crop'} value={p.crop || 'Tomato'}>
+                  {p.crop || 'Tomato'} ({p.locationName || p.district || 'Mandi'})
                 </option>
               ))
             ) : (
@@ -75,22 +84,22 @@ export default function FairPriceCard({ pricesList = [] }) {
           <div>
             <span className={styles.priceLabel}>Market Benchmark</span>
             <div className={styles.priceValue}>
-              ₹{activeCropData.price}<span className={styles.unit}>/{activeCropData.unit || 'kg'}</span>
+              ₹{displayPrice}<span className={styles.unit}>/{unitText}</span>
             </div>
           </div>
           <div className={styles.trendInfo}>
             <span className={styles.trendBadge}>
-              <TrendingUp size={14} /> +{activeCropData.changePercentage || 6.2}%
+              <TrendingUp size={14} /> {changePct >= 0 ? `+${changePct}` : changePct}%
             </span>
             <span className={styles.rangeText}>
-              Range: ₹{activeCropData.minPrice || 38} - ₹{activeCropData.maxPrice || 46}/kg
+              Range: ₹{minPrice} - ₹{maxPrice}/{unitText}
             </span>
           </div>
         </div>
 
         {/* Clean SVG Trend Line Chart */}
         <div className={styles.chartWrap}>
-          <PriceChart history={activeCropData.history} currentPrice={activeCropData.price} />
+          <PriceChart history={historyData} currentPrice={displayPrice} />
         </div>
       </div>
     </div>

@@ -18,7 +18,6 @@ export const NAV_ITEMS = [
   { id: 'batches',   label: 'My Batches', icon: Package, badge: '3' },
   { id: 'prices',    label: 'Market Prices', icon: TrendingUp },
   { id: 'offers',    label: 'Buyer Offers', icon: HandCoins, badge: '5' },
-  { id: 'track',     label: 'Track Produce', icon: Truck },
   { id: 'history',   label: 'Verified History', icon: History },
   { id: 'profile',   label: 'Profile', icon: User },
   { id: 'settings',  label: 'Settings', icon: Settings },

@@ -16,6 +16,9 @@ export default function App() {
     if (['farmer-register', 'buyer-register', 'farmer-dashboard', 'buyer-dashboard'].includes(hash)) {
       return hash
     }
+    if (hash.startsWith('/') || hash.includes('market-prices')) {
+      return 'farmer-dashboard'
+    }
     return 'login'
   }
 
@@ -26,6 +29,8 @@ export default function App() {
       const hash = window.location.hash.replace('#', '')
       if (['farmer-register', 'buyer-register', 'farmer-dashboard', 'buyer-dashboard', 'login'].includes(hash)) {
         setCurrentView(hash)
+      } else if (hash.startsWith('/') || hash.includes('market-prices') || hash.includes('batches') || hash.includes('offers')) {
+        setCurrentView('farmer-dashboard')
       } else if (!hash) {
         setCurrentView('login')
       }

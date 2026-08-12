@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, UserCheck, Loader2 } from 'lucide-react'
 import FormSelect from '../auth/FormSelect'
 import { FormField, SubmitButton } from '../auth/LoginForm'
@@ -12,33 +12,63 @@ const TAMIL_NADU_DISTRICTS = [
 
 /**
  * Edit Profile Modal Dialog Component
- * Uses farmerApi.updateProfile service function
+ * Allows editing Name, Mobile number, Email, Village/Town, District, State.
+ *
+ * // TODO: Replace localStorage/demo persistence with backend API
+ * // Backend teammate will connect this to the Farmer Profile API.
  *
  * @param {{ isOpen: boolean, profile: any, onClose: () => void, onProfileUpdated: (profile: any) => void }} props
  */
 export default function EditProfileModal({ isOpen, profile = {}, onClose, onProfileUpdated }) {
-  const [fullName, setFullName] = useState(profile.name || 'Aswanth')
-  const [village, setVillage]   = useState(profile.village || 'Coimbatore')
+  const [fullName, setFullName] = useState(profile.name || profile.fullName || 'Aswanth Kumar')
+  const [mobile, setMobile]     = useState(profile.mobile || '+91 98765 43210')
+  const [email, setEmail]       = useState(profile.email || 'aswanth.farmer@uzhavarsetu.in')
+  const [village, setVillage]   = useState(profile.village || 'Pollachi')
   const [district, setDistrict] = useState(profile.district || 'Coimbatore')
   const [state, setState]       = useState(profile.state || 'Tamil Nadu')
 
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
 
+  useEffect(() => {
+    if (profile) {
+      if (profile.fullName || profile.name) setFullName(profile.fullName || profile.name)
+      if (profile.mobile) setMobile(profile.mobile)
+      if (profile.email) setEmail(profile.email)
+      if (profile.village) setVillage(profile.village)
+      if (profile.district) setDistrict(profile.district)
+      if (profile.state) setState(profile.state)
+    }
+  }, [profile])
+
+  // Lock background page scroll while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
-  // DEMO API:
-  // FUTURE BACKEND ENDPOINT:
-  // PUT /api/farmer/profile
-  // Replace this mock call with Spring Boot API when ready.
+  // TODO: Replace localStorage/demo persistence with backend API
+  // Backend teammate will connect this to the Farmer Profile API.
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
+      // Simulate API response / update
       const response = await updateProfile({
         name: fullName,
+        fullName,
+        mobile,
+        email,
         village,
         district,
         state,
@@ -46,7 +76,16 @@ export default function EditProfileModal({ isOpen, profile = {}, onClose, onProf
 
       setLoading(false)
       if (onProfileUpdated) {
-        onProfileUpdated(response.farmer)
+        onProfileUpdated({
+          fullName,
+          name: fullName,
+          mobile,
+          email,
+          village,
+          district,
+          state,
+          ...(response?.farmer || {}),
+        })
       }
       onClose()
     } catch {
@@ -75,6 +114,24 @@ export default function EditProfileModal({ isOpen, profile = {}, onClose, onProf
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            required
+          />
+
+          <FormField
+            id="edit-mobile"
+            label="Mobile Number *"
+            type="tel"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            required
+          />
+
+          <FormField
+            id="edit-email"
+            label="Email Address *"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
 

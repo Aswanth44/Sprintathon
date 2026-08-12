@@ -11,9 +11,9 @@ export default function PriceChart({ history = [], currentPrice = 42 }) {
 
   // Chart dimensions
   const width = 360
-  const height = 140
+  const height = 150
   const paddingX = 30
-  const paddingY = 25
+  const paddingY = 32
 
   const prices = history.map((h) => h.price)
   const minP = Math.min(...prices) - 2
@@ -22,7 +22,7 @@ export default function PriceChart({ history = [], currentPrice = 42 }) {
   // Map data points to SVG coordinates
   const points = history.map((item, i) => {
     const x = paddingX + (i / (history.length - 1)) * (width - paddingX * 2)
-    const y = height - paddingY - ((item.price - minP) / (maxP - minP)) * (height - paddingY * 2)
+    const y = height - paddingY - ((item.price - minP) / (maxP - minP || 1)) * (height - paddingY * 2)
     return { x, y, ...item }
   })
 
@@ -80,7 +80,7 @@ export default function PriceChart({ history = [], currentPrice = 42 }) {
         {/* Data points & hover triggers */}
         {points.map((pt, i) => {
           const isHovered = hoveredIdx === i
-          const isLast = i === points.length - 2 // Today
+          const isLast = i === points.length - 1
 
           return (
             <g key={i} onMouseEnter={() => setHoveredIdx(i)} onMouseLeave={() => setHoveredIdx(null)}>
@@ -103,21 +103,24 @@ export default function PriceChart({ history = [], currentPrice = 42 }) {
                 x={pt.x}
                 y={height - 6}
                 textAnchor="middle"
-                fontSize="9"
-                fontWeight={isHovered ? 'bold' : '500'}
-                fill={isHovered ? 'var(--color-green-deep)' : 'var(--color-text-muted)'}
+                fontSize="10"
+                fontWeight={isHovered ? 'bold' : '600'}
+                fill={isHovered ? 'var(--color-green-deep)' : 'var(--color-text-secondary)'}
               >
-                {pt.day.split(' ')[0]}
+                {(() => {
+                  const rawDay = pt.day ?? pt.date ?? ''
+                  return typeof rawDay === 'string' ? rawDay.split(' ')[0] : ''
+                })()}
               </text>
 
               {/* Price callout text above point */}
               <text
                 x={pt.x}
-                y={pt.y - 8}
+                y={pt.y - 9}
                 textAnchor="middle"
-                fontSize="10"
+                fontSize="11"
                 fontWeight="bold"
-                fill={isHovered || isLast ? 'var(--color-green-deep)' : 'var(--color-text-secondary)'}
+                fill="var(--color-green-deep)"
               >
                 ₹{pt.price}
               </text>

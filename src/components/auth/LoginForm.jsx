@@ -89,11 +89,12 @@ export function RememberForgotRow({ rememberMe, onRememberChange, forgotHref = '
 /**
  * Primary submit button
  */
-export function SubmitButton({ children, loading = false, id }) {
+export function SubmitButton({ children, loading = false, id, onClick, type = 'submit' }) {
   return (
     <button
       id={id}
-      type="submit"
+      type={type}
+      onClick={onClick}
       className={styles.submitBtn}
       disabled={loading}
       aria-busy={loading}

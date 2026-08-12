@@ -8,6 +8,7 @@ import {
   PasswordField,
   SubmitButton,
 } from './LoginForm'
+import { savePersistedProfile, savePersistedFarmDetails } from '../../mock/mockFarmerData'
 import styles from './FarmerLogin.module.css'
 
 const CROP_OPTIONS = [
@@ -61,6 +62,10 @@ export default function FarmerRegistration({ onNavigate }) {
   const [loading, setLoading]                 = useState(false)
   const [error, setError]                     = useState('')
 
+  // Registered persistence state
+  const [createdProfile, setCreatedProfile]   = useState(null)
+  const [createdFarm, setCreatedFarm]         = useState(null)
+
   const termsCheckboxId = useId()
 
   // Step 1 Validations
@@ -97,8 +102,53 @@ export default function FarmerRegistration({ onNavigate }) {
     setLoading(true)
 
     try {
-      // Mock account creation API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Create registered farmer profile & farm objects
+      const cleanName = fullName.trim() || 'Aswanth Kumar'
+      const cleanMobile = mobile.startsWith('+91') ? mobile : `+91 ${mobile}`
+      const cleanEmail = email.trim() || `${cleanName.toLowerCase().replace(/\s+/g, '.')}@uzhavarsetu.in`
+      const formattedFarmSize = farmSize.includes('acre') ? farmSize : `${farmSize} acres`
+      const farmerId = `UZH-FMR-00${Math.floor(129 + Math.random() * 800)}`
+
+      const profileObj = {
+        fullName: cleanName,
+        name: cleanName,
+        farmerId: farmerId,
+        avatar: cleanName.charAt(0).toUpperCase(),
+        status: 'Verified Farmer',
+        verified: true,
+        mobile: cleanMobile,
+        phone: cleanMobile,
+        email: cleanEmail,
+        registrationDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        village: village.trim() || 'Pollachi',
+        district: district.trim() || 'Coimbatore',
+        state: state.trim() || 'Tamil Nadu',
+        location: `${village.trim() || 'Pollachi'}, ${state.trim() || 'Tamil Nadu'}`,
+        farmLocation: `${village.trim() || 'Pollachi'}, ${district.trim() || 'Coimbatore'} - 642001`,
+        farmSize: formattedFarmSize,
+        primaryCrop: primaryCrop || 'Tomato',
+        primaryCrops: [primaryCrop || 'Tomato', 'Onion', 'Coconut'],
+      }
+
+      const farmDetailsObj = {
+        farmSize: formattedFarmSize,
+        primaryCrops: [primaryCrop || 'Tomato', 'Onion', 'Coconut'],
+        otherCrops: ['Banana', 'Turmeric'],
+        farmingType: 'Organic & Drip Irrigated',
+        experienceYears: '5 Years',
+        farmLocation: `${village.trim() || 'Pollachi'}, ${district.trim() || 'Coimbatore'} - 642001`,
+      }
+
+      // Persist to localStorage & application state
+      savePersistedProfile(profileObj)
+      savePersistedFarmDetails(farmDetailsObj)
+      localStorage.setItem('uzhavarsetu_user_role', 'farmer')
+      localStorage.setItem('uzhavarsetu_auth_status', 'authenticated')
+
+      setCreatedProfile(profileObj)
+      setCreatedFarm(farmDetailsObj)
+
+      await new Promise((resolve) => setTimeout(resolve, 600))
       setStep('success')
     } catch {
       setError('Registration failed. Please try again.')
@@ -107,8 +157,37 @@ export default function FarmerRegistration({ onNavigate }) {
     }
   }
 
+  const handleGoToDashboard = () => {
+    if (createdProfile) {
+      savePersistedProfile(createdProfile)
+    }
+    if (createdFarm) {
+      savePersistedFarmDetails(createdFarm)
+    }
+    localStorage.setItem('uzhavarsetu_user_role', 'farmer')
+    localStorage.setItem('uzhavarsetu_auth_status', 'authenticated')
+
+    if (onNavigate) {
+      onNavigate('farmer-dashboard')
+    } else {
+      window.location.hash = '#farmer-dashboard'
+    }
+  }
+
   // ── SUCCESS STATE ────────────────────────────────────────────────────────
   if (step === 'success') {
+    const displayProfile = createdProfile || {
+      fullName: fullName || 'Aswanth Kumar',
+      farmerId: 'UZH-FMR-000128',
+      mobile: mobile ? `+91 ${mobile}` : '+91 98765 43210',
+      email: email || 'aswanth.farmer@uzhavarsetu.in',
+      village: village || 'Pollachi',
+      district: district || 'Coimbatore',
+      state: state || 'Tamil Nadu',
+      primaryCrop: primaryCrop || 'Tomato',
+      farmSize: farmSize ? `${farmSize} Acres` : '5.5 Acres',
+    }
+
     return (
       <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 'var(--space-5)', alignItems: 'center' }}>
         <div style={{
@@ -130,7 +209,7 @@ export default function FarmerRegistration({ onNavigate }) {
             Farmer Account Created!
           </h2>
           <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-base)' }}>
-            Welcome to UzhavarSetu, <strong>{fullName}</strong>!
+            Welcome to UzhavarSetu, <strong>{displayProfile.fullName}</strong>!
           </p>
         </div>
 
@@ -144,18 +223,18 @@ export default function FarmerRegistration({ onNavigate }) {
           fontSize: 'var(--text-sm)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-green-deep)', fontWeight: 'var(--font-semibold)', marginBottom: 'var(--space-2)' }}>
-            <ShieldCheck size={18} /> Verified Farmer Profile
+            <ShieldCheck size={18} /> Verified Farmer Profile (ID: {displayProfile.farmerId})
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-2)', color: 'var(--color-text-secondary)' }}>
-            <div>Crop: <strong>{primaryCrop}</strong></div>
-            <div>Farm Size: <strong>{farmSize} Acres</strong></div>
-            <div>Location: <strong>{district}, {state}</strong></div>
-            <div>Mobile: <strong>+91 {mobile}</strong></div>
-            {email && <div style={{ gridColumn: '1 / -1' }}>Email: <strong>{email}</strong></div>}
+            <div>Crop: <strong>{displayProfile.primaryCrop}</strong></div>
+            <div>Farm Size: <strong>{displayProfile.farmSize}</strong></div>
+            <div>Location: <strong>{displayProfile.village}, {displayProfile.district}</strong></div>
+            <div>Mobile: <strong>{displayProfile.mobile}</strong></div>
+            {displayProfile.email && <div style={{ gridColumn: '1 / -1' }}>Email: <strong>{displayProfile.email}</strong></div>}
           </div>
         </div>
 
-        <SubmitButton id="go-farmer-dashboard" onClick={() => onNavigate('farmer-dashboard')}>
+        <SubmitButton id="go-farmer-dashboard" type="button" onClick={handleGoToDashboard}>
           <Tractor size={18} aria-hidden="true" />
           Go to Farmer Dashboard
         </SubmitButton>

@@ -21,7 +21,7 @@ body {
   font-family: var(--font-primary);
   font-size: var(--text-base);
   color: var(--color-text-primary);
-  background-color: var(--color-charcoal);
+  background-color: var(--color-off-white);
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

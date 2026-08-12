@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Lock, CheckCircle2 } from 'lucide-react'
 import { FormField, PasswordField, SubmitButton } from '../auth/LoginForm'
 import PasswordStrength from '../auth/PasswordStrength'
@@ -17,6 +17,18 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError]     = useState('')
+
+  // Lock background page scroll while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 

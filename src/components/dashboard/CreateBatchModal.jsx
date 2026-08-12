@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, CheckCircle2, Package } from 'lucide-react'
 import FormSelect from '../auth/FormSelect'
 import { FormField, SubmitButton } from '../auth/LoginForm'
@@ -21,6 +21,18 @@ export default function CreateBatchModal({ isOpen, onClose, onBatchCreated }) {
   const [loading, setLoading]   = useState(false)
   const [createdBatch, setCreatedBatch] = useState(null)
   const [error, setError]       = useState('')
+
+  // Lock background page scroll while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 

@@ -1,73 +1,63 @@
 import { useState } from 'react'
 import {
-  User,
-  Sprout,
-  Sliders,
-  ShieldCheck,
   Lock,
-  LogOut,
-  Edit3,
-  CheckCircle2,
-  Globe,
-  Bell,
+  Smartphone,
   Laptop,
+  Bell,
+  Globe,
+  MapPin,
+  Sprout,
+  Scale,
+  ShieldCheck,
+  KeyRound,
+  Eye,
+  HelpCircle,
+  AlertTriangle,
+  FileText,
+  Info,
+  LogOut,
+  CheckCircle2,
 } from 'lucide-react'
-import EditProfileModal from './EditProfileModal'
-import EditFarmModal from './EditFarmModal'
 import ChangePasswordModal from './ChangePasswordModal'
 import styles from './SettingsView.module.css'
 
 /**
- * Settings View Page Component
- * Renders full settings sections: Profile, Farm Details, Preferences, Security, and Account.
+ * FARMER SETTINGS VIEW COMPONENT
+ * Manages account preferences, notification toggles, security controls, support & session actions.
+ * "HOW THE FARMER USES THE APPLICATION"
  *
- * @param {{ farmerProfile: any, onProfileUpdated: (p: any) => void, onLogout: () => void }} props
+ * TODO: Replace demo persistence with backend API
+ * Backend teammate will connect this to the Farmer Settings API.
  */
-export default function SettingsView({ farmerProfile, onProfileUpdated, onLogout }) {
-  // Local Settings State
-  const [profileData, setProfileData] = useState(farmerProfile || {
-    name: 'Aswanth',
-    phone: '+91 98765 43210',
-    village: 'Coimbatore',
-    district: 'Coimbatore',
-    state: 'Tamil Nadu',
-    status: 'Verified Farmer',
-    farmSize: '5.5 acres',
-    primaryCrop: 'Tomato, Onion, Coconut',
-    location: 'Coimbatore, Tamil Nadu',
-  })
+export default function SettingsView({ onLogout }) {
+  // Notification Toggles
+  const [buyerOfferAlerts, setBuyerOfferAlerts] = useState(true)
+  const [marketPriceAlerts, setMarketPriceAlerts] = useState(true)
+  const [pickupUpdates, setPickupUpdates] = useState(true)
+  const [paymentNotifications, setPaymentNotifications] = useState(true)
 
-  // Frontend Preferences (persisted in local state)
-  const [language, setLanguage]               = useState('English')
-  const [priceAlerts, setPriceAlerts]         = useState(true)
-  const [offerNotifs, setOfferNotifs]         = useState(true)
-  const [toastMessage, setToastMessage]       = useState('')
+  // Application Preferences
+  const [language, setLanguage] = useState('English')
+  const [location, setLocation] = useState('Coimbatore')
+  const [defaultCrop, setDefaultCrop] = useState('Tomato')
+  const [measurementUnit, setMeasurementUnit] = useState('kg')
 
-  // Modal Dialog States
-  const [isProfileModalOpen, setIsProfileModalOpen]   = useState(false)
-  const [isFarmModalOpen, setIsFarmModalOpen]         = useState(false)
+  // Privacy & Security Controls
+  const [twoFactorAuth, setTwoFactorAuth] = useState(true)
+  const [dataSharing, setDataSharing] = useState(true)
+
+  // Modals & Toasts
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
 
   const showToast = (msg) => {
     setToastMessage(msg)
     setTimeout(() => setToastMessage(''), 3000)
   }
 
-  const handleProfileSave = (updated) => {
-    setProfileData((prev) => ({ ...prev, ...updated }))
-    if (onProfileUpdated) onProfileUpdated(updated)
-    showToast('Profile updated successfully')
-  }
-
-  const handleFarmSave = (updated) => {
-    setProfileData((prev) => ({ ...prev, ...updated }))
-    if (onProfileUpdated) onProfileUpdated(updated)
-    showToast('Farm details updated successfully')
-  }
-
   return (
     <div className={styles.container}>
-      {/* Toast Notification Banner */}
+      {/* Toast Banner */}
       {toastMessage && (
         <div className={styles.toastBanner}>
           <CheckCircle2 size={18} />
@@ -75,270 +65,433 @@ export default function SettingsView({ farmerProfile, onProfileUpdated, onLogout
         </div>
       )}
 
+      {/* Header */}
       <div className={styles.pageHeader}>
-        <h2 className={styles.title}>Settings</h2>
+        <h2 className={styles.title}>Application Settings</h2>
         <p className={styles.subtitle}>
-          Manage your account, farm information and preferences
+          Configure your notifications, security credentials, support &amp; usage preferences
         </p>
       </div>
 
-      {/* 2-Column Grid for Desktop / 1-Column on Mobile */}
-      <div className={styles.twoColGrid}>
-        {/* 1. Profile Information Card */}
+      {/* 2-Column Responsive Layout */}
+      <div className={styles.gridTwoCol}>
+        {/* 1. ACCOUNT CATEGORY */}
         <section className={styles.card}>
           <div className={styles.cardHeader}>
             <div className={styles.titleWrap}>
-              <div className={styles.iconWrap}>
-                <User size={20} />
+              <div className={`${styles.iconWrap} ${styles.iconAccount}`}>
+                <Lock size={20} />
               </div>
               <div>
-                <h3 className={styles.cardTitle}>Profile Information</h3>
-                <p className={styles.cardDesc}>Personal details and contact info</p>
+                <h3 className={styles.cardTitle}>Account Credentials</h3>
+                <p className={styles.cardDesc}>Password &amp; authentication access</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsProfileModalOpen(true)}
-              className={styles.editBtn}
-            >
-              <Edit3 size={15} /> Edit Profile
-            </button>
           </div>
 
-          <div className={styles.profileBody}>
-            <div className={styles.avatarRow}>
-              <div className={styles.avatarCircle}>
-                {profileData.name ? profileData.name[0] : 'A'}
+          <div className={styles.settingGroup}>
+            {/* Change Password */}
+            <div className={styles.settingRow}>
+              <div className={styles.rowLeft}>
+                <KeyRound size={18} className={styles.rowIcon} />
+                <div>
+                  <div className={styles.rowTitle}>Account Password</div>
+                  <div className={styles.rowDesc}>Update your account password regularly</div>
+                </div>
               </div>
-              <div>
-                <h4 className={styles.nameText}>{profileData.name}</h4>
-                <span className={styles.verifiedBadge}>
-                  <CheckCircle2 size={13} /> {profileData.status || 'Verified Farmer'}
-                </span>
-              </div>
+              <button
+                onClick={() => setIsPasswordModalOpen(true)}
+                className={styles.actionBtn}
+              >
+                <Lock size={14} /> Change Password
+              </button>
             </div>
 
-            <div className={styles.infoGrid}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Full Name</span>
-                <span className={styles.infoValue}>{profileData.name}</span>
+            {/* Change Mobile Number */}
+            <div className={styles.settingRow}>
+              <div className={styles.rowLeft}>
+                <Smartphone size={18} className={styles.rowIcon} />
+                <div>
+                  <div className={styles.rowTitle}>Registered Mobile Number</div>
+                  <div className={styles.rowDesc}>+91 98765 43210 (OTP Verified)</div>
+                </div>
               </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Mobile Number</span>
-                <span className={styles.infoValue}>{profileData.phone || '+91 98765 43210'}</span>
+              <button
+                onClick={() => showToast('Mobile number update request initiated via OTP')}
+                className={styles.actionBtnSecondary}
+              >
+                Change Mobile
+              </button>
+            </div>
+
+            {/* Manage Login Sessions */}
+            <div className={styles.settingRow}>
+              <div className={styles.rowLeft}>
+                <Laptop size={18} className={styles.rowIcon} />
+                <div>
+                  <div className={styles.rowTitle}>Manage Login Sessions</div>
+                  <div className={styles.rowDesc}>Current Device: Windows / Chrome — Active Now</div>
+                </div>
               </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Village / Town</span>
-                <span className={styles.infoValue}>{profileData.village || 'Coimbatore'}</span>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>District</span>
-                <span className={styles.infoValue}>{profileData.district || 'Coimbatore'}</span>
-              </div>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>State</span>
-                <span className={styles.infoValue}>{profileData.state || 'Tamil Nadu'}</span>
-              </div>
+              <span className={styles.activeTag}>Current Session</span>
             </div>
           </div>
         </section>
 
-        {/* 2. Farm Information Card */}
+        {/* 2. NOTIFICATIONS CATEGORY */}
         <section className={styles.card}>
           <div className={styles.cardHeader}>
             <div className={styles.titleWrap}>
-              <div className={`${styles.iconWrap} ${styles.iconFarm}`}>
-                <Sprout size={20} />
+              <div className={`${styles.iconWrap} ${styles.iconNotif}`}>
+                <Bell size={20} />
               </div>
               <div>
-                <h3 className={styles.cardTitle}>Farm Information</h3>
-                <p className={styles.cardDesc}>Acreage, crops and location</p>
+                <h3 className={styles.cardTitle}>Notifications &amp; Alerts</h3>
+                <p className={styles.cardDesc}>Manage real-time updates and push alerts</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsFarmModalOpen(true)}
-              className={styles.editBtn}
-            >
-              <Edit3 size={15} /> Edit Farm Details
-            </button>
           </div>
 
-          <div className={styles.infoGrid} style={{ marginTop: 'var(--space-4)' }}>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Farm Size</span>
-              <span className={styles.infoValue}>{profileData.farmSize || '5.5 acres'}</span>
+          <div className={styles.toggleList}>
+            {/* Buyer Offer Alerts */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Buyer Offer Alerts</div>
+                <div className={styles.toggleDesc}>Get notified immediately when buyers place new bids</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={buyerOfferAlerts}
+                  onChange={(e) => {
+                    setBuyerOfferAlerts(e.target.checked)
+                    showToast(`Buyer Offer Alerts ${e.target.checked ? 'Enabled' : 'Disabled'}`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
             </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Primary Crops</span>
-              <span className={styles.infoValue}>{profileData.primaryCrop || 'Tomato, Onion, Coconut'}</span>
+
+            {/* Market Price Alerts */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Market Price Alerts</div>
+                <div className={styles.toggleDesc}>Alert when mandi prices change by $\ge 5\%$</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={marketPriceAlerts}
+                  onChange={(e) => {
+                    setMarketPriceAlerts(e.target.checked)
+                    showToast(`Market Price Alerts ${e.target.checked ? 'Enabled' : 'Disabled'}`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
             </div>
-            <div className={styles.infoItem} style={{ gridColumn: 'span 2' }}>
-              <span className={styles.infoLabel}>Farm Location</span>
-              <span className={styles.infoValue}>{profileData.location || 'Coimbatore, Tamil Nadu'}</span>
+
+            {/* Pickup & Transport Updates */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Pickup &amp; Transport Updates</div>
+                <div className={styles.toggleDesc}>Logistics dispatch and produce pickup status notifications</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={pickupUpdates}
+                  onChange={(e) => {
+                    setPickupUpdates(e.target.checked)
+                    showToast(`Pickup & Transport Updates ${e.target.checked ? 'Enabled' : 'Disabled'}`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
+            </div>
+
+            {/* Payment Notifications */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Payment Notifications</div>
+                <div className={styles.toggleDesc}>Direct bank transfer confirmation &amp; receipt alerts</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={paymentNotifications}
+                  onChange={(e) => {
+                    setPaymentNotifications(e.target.checked)
+                    showToast(`Payment Notifications ${e.target.checked ? 'Enabled' : 'Disabled'}`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. PREFERENCES CATEGORY */}
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <div className={styles.titleWrap}>
+              <div className={`${styles.iconWrap} ${styles.iconPref}`}>
+                <Globe size={20} />
+              </div>
+              <div>
+                <h3 className={styles.cardTitle}>Application Preferences</h3>
+                <p className={styles.cardDesc}>Language, location &amp; unit defaults</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.prefGrid}>
+            {/* Language */}
+            <div className={styles.prefItem}>
+              <div className={styles.prefLabelWrap}>
+                <Globe size={16} className={styles.prefIcon} />
+                <span>Preferred Language</span>
+              </div>
+              <select
+                value={language}
+                onChange={(e) => {
+                  setLanguage(e.target.value)
+                  showToast(`Language set to ${e.target.value}`)
+                }}
+                className={styles.selectBox}
+                aria-label="Select Language"
+              >
+                <option value="English">English</option>
+                <option value="தமிழ்">தமிழ் (Tamil)</option>
+              </select>
+            </div>
+
+            {/* Default Location */}
+            <div className={styles.prefItem}>
+              <div className={styles.prefLabelWrap}>
+                <MapPin size={16} className={styles.prefIcon} />
+                <span>Default Market Region</span>
+              </div>
+              <select
+                value={location}
+                onChange={(e) => {
+                  setLocation(e.target.value)
+                  showToast(`Default location set to ${e.target.value}`)
+                }}
+                className={styles.selectBox}
+                aria-label="Select Location"
+              >
+                <option value="Coimbatore">Coimbatore</option>
+                <option value="Tiruppur">Tiruppur</option>
+                <option value="Erode">Erode</option>
+                <option value="Salem">Salem</option>
+                <option value="Madurai">Madurai</option>
+                <option value="Chennai">Chennai</option>
+              </select>
+            </div>
+
+            {/* Default Crop */}
+            <div className={styles.prefItem}>
+              <div className={styles.prefLabelWrap}>
+                <Sprout size={16} className={styles.prefIcon} />
+                <span>Default Crop</span>
+              </div>
+              <select
+                value={defaultCrop}
+                onChange={(e) => {
+                  setDefaultCrop(e.target.value)
+                  showToast(`Default crop set to ${e.target.value}`)
+                }}
+                className={styles.selectBox}
+                aria-label="Select Default Crop"
+              >
+                <option value="Tomato">Tomato</option>
+                <option value="Onion">Onion</option>
+                <option value="Potato">Potato</option>
+                <option value="Rice">Rice</option>
+                <option value="Banana">Banana</option>
+                <option value="Coconut">Coconut</option>
+              </select>
+            </div>
+
+            {/* Measurement Unit */}
+            <div className={styles.prefItem}>
+              <div className={styles.prefLabelWrap}>
+                <Scale size={16} className={styles.prefIcon} />
+                <span>Measurement Unit</span>
+              </div>
+              <select
+                value={measurementUnit}
+                onChange={(e) => {
+                  setMeasurementUnit(e.target.value)
+                  showToast(`Unit set to ${e.target.value}`)
+                }}
+                className={styles.selectBox}
+                aria-label="Select Measurement Unit"
+              >
+                <option value="kg">Kilograms (kg)</option>
+                <option value="quintal">Quintals (100 kg)</option>
+                <option value="ton">Metric Tons (1000 kg)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        {/* 4. PRIVACY & SECURITY CATEGORY */}
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <div className={styles.titleWrap}>
+              <div className={`${styles.iconWrap} ${styles.iconSec}`}>
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <h3 className={styles.cardTitle}>Privacy &amp; Security</h3>
+                <p className={styles.cardDesc}>Two-factor authentication &amp; data privacy</p>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.toggleList}>
+            {/* Two-Factor Authentication */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Two-Factor Authentication (2FA)</div>
+                <div className={styles.toggleDesc}>Require SMS OTP when logging in from new devices</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={twoFactorAuth}
+                  onChange={(e) => {
+                    setTwoFactorAuth(e.target.checked)
+                    showToast(`2FA ${e.target.checked ? 'Enabled' : 'Disabled'}`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
+            </div>
+
+            {/* Privacy Controls */}
+            <div className={styles.toggleRow}>
+              <div>
+                <div className={styles.toggleTitle}>Verified Buyer Data Sharing</div>
+                <div className={styles.toggleDesc}>Allow verified buyers to see batch location &amp; quantity</div>
+              </div>
+              <label className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={dataSharing}
+                  onChange={(e) => {
+                    setDataSharing(e.target.checked)
+                    showToast(`Data sharing preference updated`)
+                  }}
+                />
+                <span className={styles.slider} />
+              </label>
             </div>
           </div>
         </section>
       </div>
 
-      {/* 3. Preferences Section (Frontend Only) */}
+      {/* 5. SUPPORT CATEGORY */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.titleWrap}>
-            <div className={`${styles.iconWrap} ${styles.iconPref}`}>
-              <Sliders size={20} />
+            <div className={`${styles.iconWrap} ${styles.iconSupport}`}>
+              <HelpCircle size={20} />
             </div>
             <div>
-              <h3 className={styles.cardTitle}>Preferences</h3>
-              <p className={styles.cardDesc}>Language &amp; notification settings</p>
+              <h3 className={styles.cardTitle}>Support &amp; Resources</h3>
+              <p className={styles.cardDesc}>Help documentation, policy terms &amp; problem reporting</p>
             </div>
           </div>
         </div>
 
-        <div className={styles.prefList}>
-          {/* Language Selector */}
-          <div className={styles.prefRow}>
-            <div className={styles.prefLeft}>
-              <Globe size={18} className={styles.prefIcon} />
-              <div>
-                <span className={styles.prefTitle}>Language</span>
-                <p className={styles.prefDesc}>Choose your preferred application language</p>
-              </div>
+        <div className={styles.supportGrid}>
+          <button
+            onClick={() => showToast('Redirecting to Help & Support Center...')}
+            className={styles.supportCard}
+          >
+            <HelpCircle size={18} className={styles.supportIcon} />
+            <div>
+              <div className={styles.supportTitle}>Help &amp; Support</div>
+              <div className={styles.supportDesc}>FAQs and guidebooks</div>
             </div>
-            <select
-              value={language}
-              onChange={(e) => {
-                setLanguage(e.target.value)
-                showToast(`Language set to ${e.target.value}`)
-              }}
-              className={styles.langSelect}
-              aria-label="Select Language"
-            >
-              <option value="English">English</option>
-              <option value="தமிழ்">தமிழ் (Tamil)</option>
-            </select>
-          </div>
+          </button>
 
-          {/* Price Alerts Toggle */}
-          <div className={styles.prefRow}>
-            <div className={styles.prefLeft}>
-              <Bell size={18} className={styles.prefIcon} />
-              <div>
-                <span className={styles.prefTitle}>Price Alerts</span>
-                <p className={styles.prefDesc}>Notify me when market prices change significantly.</p>
-              </div>
+          <button
+            onClick={() => showToast('Opening Report a Problem dialog...')}
+            className={styles.supportCard}
+          >
+            <AlertTriangle size={18} className={styles.supportIconWarn} />
+            <div>
+              <div className={styles.supportTitle}>Report a Problem</div>
+              <div className={styles.supportDesc}>Contact technical team</div>
             </div>
-            <label className={styles.switch}>
-              <input
-                type="checkbox"
-                checked={priceAlerts}
-                onChange={(e) => setPriceAlerts(e.target.checked)}
-              />
-              <span className={styles.slider} />
-            </label>
-          </div>
+          </button>
 
-          {/* Buyer Offer Notifications Toggle */}
-          <div className={styles.prefRow}>
-            <div className={styles.prefLeft}>
-              <Bell size={18} className={styles.prefIcon} />
-              <div>
-                <span className={styles.prefTitle}>Buyer Offer Notifications</span>
-                <p className={styles.prefDesc}>Notify me when buyers make new offers.</p>
-              </div>
+          <button
+            onClick={() => showToast('Opening Terms of Service...')}
+            className={styles.supportCard}
+          >
+            <FileText size={18} className={styles.supportIcon} />
+            <div>
+              <div className={styles.supportTitle}>Terms of Service</div>
+              <div className={styles.supportDesc}>Usage rules &amp; contracts</div>
             </div>
-            <label className={styles.switch}>
-              <input
-                type="checkbox"
-                checked={offerNotifs}
-                onChange={(e) => setOfferNotifs(e.target.checked)}
-              />
-              <span className={styles.slider} />
-            </label>
-          </div>
+          </button>
+
+          <button
+            onClick={() => showToast('Opening Privacy Policy...')}
+            className={styles.supportCard}
+          >
+            <Eye size={18} className={styles.supportIcon} />
+            <div>
+              <div className={styles.supportTitle}>Privacy Policy</div>
+              <div className={styles.supportDesc}>Data protection rules</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => showToast('UzhavarSetu v1.4.0 — Empowering Farmers Across Tamil Nadu')}
+            className={styles.supportCard}
+          >
+            <Info size={18} className={styles.supportIconInfo} />
+            <div>
+              <div className={styles.supportTitle}>About UzhavarSetu</div>
+              <div className={styles.supportDesc}>Version 1.4.0 (Build 2026)</div>
+            </div>
+          </button>
         </div>
       </section>
 
-      {/* 4. Security Section */}
+      {/* 6. ACCOUNT ACTIONS */}
       <section className={styles.card}>
         <div className={styles.cardHeader}>
           <div className={styles.titleWrap}>
-            <div className={`${styles.iconWrap} ${styles.iconSec}`}>
-              <ShieldCheck size={20} />
+            <div className={`${styles.iconWrap} ${styles.iconDanger}`}>
+              <LogOut size={20} />
             </div>
             <div>
-              <h3 className={styles.cardTitle}>Security</h3>
-              <p className={styles.cardDesc}>Password &amp; active login sessions</p>
+              <h3 className={styles.cardTitle}>Account Actions</h3>
+              <p className={styles.cardDesc}>Sign out or terminate current active session</p>
             </div>
           </div>
         </div>
 
-        <div className={styles.securityGrid}>
-          <div className={styles.securityItem}>
-            <div>
-              <span className={styles.secItemTitle}>Change Account Password</span>
-              <p className={styles.secItemDesc}>Update your password regularly for security</p>
-            </div>
-            <button
-              onClick={() => setIsPasswordModalOpen(true)}
-              className={styles.secBtn}
-            >
-              <Lock size={14} /> Change Password
-            </button>
+        <div className={styles.actionBox}>
+          <div>
+            <div className={styles.signOutTitle}>Sign Out of UzhavarSetu</div>
+            <div className={styles.signOutDesc}>Safely end your current session on this device.</div>
           </div>
 
-          <div className={styles.securityItem}>
-            <div className={styles.deviceWrap}>
-              <Laptop size={18} className={styles.deviceIcon} />
-              <div>
-                <span className={styles.secItemTitle}>Active Login Sessions</span>
-                <p className={styles.secItemDesc}>Current Device: Windows / Chrome — Active Now</p>
-              </div>
-            </div>
-            <span className={styles.activeTag}>Current Device</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Account Section */}
-      <section className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div className={styles.titleWrap}>
-            <div className={`${styles.iconWrap} ${styles.iconAccount}`}>
-              <User size={20} />
-            </div>
-            <div>
-              <h3 className={styles.cardTitle}>Account</h3>
-              <p className={styles.cardDesc}>Membership status &amp; session controls</p>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.accountRow}>
-          <div className={styles.accountStatus}>
-            <span className={styles.statusDotGreen} />
-            <span>Verified Farmer Member (Since 2026)</span>
-          </div>
-
-          <button onClick={onLogout} className={styles.logoutBtn}>
+          <button onClick={onLogout} className={styles.signOutBtn}>
             <LogOut size={16} /> Sign Out of UzhavarSetu
           </button>
         </div>
       </section>
 
       {/* Modals */}
-      <EditProfileModal
-        isOpen={isProfileModalOpen}
-        profile={profileData}
-        onClose={() => setIsProfileModalOpen(false)}
-        onProfileUpdated={handleProfileSave}
-      />
-
-      <EditFarmModal
-        isOpen={isFarmModalOpen}
-        farm={profileData}
-        onClose={() => setIsFarmModalOpen(false)}
-        onFarmUpdated={handleFarmSave}
-      />
-
       <ChangePasswordModal
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}

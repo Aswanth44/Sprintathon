@@ -7,6 +7,7 @@ import {
   Plus,
   Loader2,
   Package,
+  Globe,
 } from 'lucide-react'
 import Sidebar from '../components/dashboard/Sidebar'
 import MobileBottomNav from '../components/dashboard/MobileBottomNav'
@@ -18,9 +19,12 @@ import QuickActions from '../components/dashboard/QuickActions'
 import RecentActivity from '../components/dashboard/RecentActivity'
 import CreateBatchModal from '../components/dashboard/CreateBatchModal'
 import SettingsView from '../components/dashboard/SettingsView'
+import ProfileView from '../components/dashboard/ProfileView'
+import MarketPricesView from '../components/dashboard/MarketPricesView'
 import CreateBatchPage from '../components/dashboard/CreateBatchPage'
 import BatchQrView from '../components/dashboard/BatchQrView'
 import BatchDetailsView from '../components/dashboard/BatchDetailsView'
+import TrackJourneyView from '../components/dashboard/TrackJourneyView'
 import Logo from '../components/branding/Logo'
 
 // API Services — Centralized API Layer
@@ -28,6 +32,7 @@ import { getDashboard } from '../api/farmerApi'
 import { getBatches } from '../api/batchApi'
 import { getMarketPrices } from '../api/marketApi'
 import { getOffers } from '../api/offerApi'
+import { getPersistedProfile } from '../mock/mockFarmerData'
 
 import styles from './FarmerDashboard.module.css'
 
@@ -51,30 +56,85 @@ export default function FarmerDashboard({ onNavigate }) {
   const [marketPrices, setMarketPrices]           = useState([])
   const [offers, setOffers]                       = useState([])
 
+  // Global Language & Left Toast Popup State
+  const [language, setLanguage]                   = useState('English')
+  const [toastMsg, setToastMsg]                   = useState('')
+
+  const handleLanguageChange = (newLang) => {
+    setLanguage(newLang)
+    setToastMsg(`Language changed to ${newLang}`)
+    setTimeout(() => setToastMsg(''), 3500)
+  }
+
+  // Hash-based routing synchronization (e.g. #/market-prices)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash
+      if (hash === '#/market-prices' || hash === '#/prices') {
+        setActiveTab('prices')
+      } else if (hash === '#/batches' || hash === '#/track') {
+        setActiveTab('batches')
+      } else if (hash === '#/offers') {
+        setActiveTab('offers')
+      } else if (hash === '#/history') {
+        setActiveTab('history')
+      } else if (hash === '#/profile') {
+        setActiveTab('profile')
+      } else if (hash === '#/settings') {
+        setActiveTab('settings')
+      } else if (hash === '#/dashboard') {
+        setActiveTab('dashboard')
+      }
+    }
+
+    handleHashChange()
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+
   // DEMO API & FUTURE BACKEND INTEGRATION POINT:
   // Loads all dashboard data asynchronously via API Service Layer
   useEffect(() => {
+    let isMounted = true
+
     async function loadData() {
       setLoading(true)
       try {
-        const [dashRes, batchesRes, marketRes, offersRes] = await Promise.all([
+        const [dashResult, batchesResult, marketResult, offersResult] = await Promise.allSettled([
           getDashboard(),
           getBatches(),
           getMarketPrices(),
           getOffers(),
         ])
-        setDashboardData(dashRes)
-        setBatches(batchesRes)
-        setMarketPrices(marketRes)
-        setOffers(offersRes)
+
+        if (!isMounted) return
+
+        if (dashResult.status === 'fulfilled' && dashResult.value) {
+          setDashboardData(dashResult.value)
+        }
+        if (batchesResult.status === 'fulfilled' && Array.isArray(batchesResult.value)) {
+          setBatches(batchesResult.value)
+        }
+        if (marketResult.status === 'fulfilled' && Array.isArray(marketResult.value)) {
+          setMarketPrices(marketResult.value)
+        }
+        if (offersResult.status === 'fulfilled' && Array.isArray(offersResult.value)) {
+          setOffers(offersResult.value)
+        }
       } catch (err) {
         console.error('Failed to fetch Farmer Dashboard API data:', err)
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     loadData()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const handleTabChange = (tabId) => {
@@ -127,25 +187,24 @@ export default function FarmerDashboard({ onNavigate }) {
     }
   }
 
-  const farmerProfile = dashboardData?.farmer || {
-    name: 'Aswanth',
-    mobile: '+91 98765 43210',
-    village: 'Coimbatore',
-    district: 'Coimbatore',
-    state: 'Tamil Nadu',
-    farmSize: '5.5 acres',
-    primaryCrops: ['Tomato', 'Onion', 'Coconut'],
-    verified: true,
+  const savedProfile = getPersistedProfile()
+  const farmerProfile = {
+    ...savedProfile,
+    ...(dashboardData?.farmer || {}),
+    name: savedProfile?.name || savedProfile?.fullName || dashboardData?.farmer?.name || 'Aswanth',
   }
 
+  const safeBatches = Array.isArray(batches) ? batches : []
+  const safeOffers = Array.isArray(offers) ? offers : []
+
   const summary = dashboardData?.summary || {
-    activeBatchesCount: batches.length || 3,
-    totalOffersCount: offers.length || 5,
+    activeBatchesCount: safeBatches.length || 3,
+    totalOffersCount: safeOffers.length || 5,
     estimatedPayout: '₹ 1,42,000',
     fairPriceRange: '₹38 - ₹45 / kg',
   }
 
-  const primaryBatch = batches[0] || {
+  const primaryBatch = safeBatches[0] || {
     batchId: 'UZH-TOM-00128',
     crop: 'Tomato',
     quantity: '500 kg',
@@ -154,7 +213,7 @@ export default function FarmerDashboard({ onNavigate }) {
     harvestDate: '2026-08-10',
   }
 
-  const topOffer = offers[0] || {
+  const topOffer = safeOffers[0] || {
     buyerName: 'Coimbatore Fresh Retail',
     location: 'Coimbatore, TN',
     offeredPrice: 42,
@@ -205,6 +264,20 @@ export default function FarmerDashboard({ onNavigate }) {
           </div>
 
           <div className={styles.headerRight}>
+            {/* Language Selector Dropdown */}
+            <div className={styles.langSelectWrap}>
+              <Globe size={15} className={styles.globeIcon} />
+              <select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className={styles.langSelect}
+                aria-label="Select Language"
+              >
+                <option value="English">English</option>
+                <option value="தமிழ்">தமிழ் (Tamil)</option>
+              </select>
+            </div>
+
             <span className={styles.profileBadge}>
               <span className={styles.avatarCircle}>
                 {farmerProfile.name ? farmerProfile.name.charAt(0) : 'A'}
@@ -220,6 +293,14 @@ export default function FarmerDashboard({ onNavigate }) {
             </button>
           </div>
         </header>
+
+        {/* Floating Toast Popup on Left */}
+        {toastMsg && (
+          <div className={styles.leftToastPopup} role="status">
+            <CheckCircle2 size={18} className={styles.toastIcon} />
+            <span>{toastMsg}</span>
+          </div>
+        )}
 
         {/* Dynamic Content Body Area */}
         <main className={styles.contentBody}>
@@ -279,7 +360,7 @@ export default function FarmerDashboard({ onNavigate }) {
 
                       <BatchCard
                         batch={primaryBatch}
-                        onTrackClick={() => handleTabChange('track')}
+                        onTrackClick={(batchId) => handleNavigateSubView('track-journey', { batchId, batch: primaryBatch })}
                       />
                     </div>
 
@@ -357,7 +438,7 @@ export default function FarmerDashboard({ onNavigate }) {
                         <BatchCard
                           key={b.batchId}
                           batch={b}
-                          onTrackClick={(batchId) => handleNavigateSubView('batch-details', { batchId, batch: b })}
+                          onTrackClick={(batchId) => handleNavigateSubView('track-journey', { batchId, batch: b })}
                         />
                       ))}
                     </div>
@@ -367,15 +448,7 @@ export default function FarmerDashboard({ onNavigate }) {
 
               {/* TAB: MARKET PRICES */}
               {activeTab === 'prices' && (
-                <div className={styles.tabSection}>
-                  <div className={styles.tabHeaderRow}>
-                    <div>
-                      <h2 className={styles.tabTitle}>Live Market &amp; Mandi Prices</h2>
-                      <p className={styles.tabSubtitle}>Government benchmark prices across Tamil Nadu mandis</p>
-                    </div>
-                  </div>
-                  <FairPriceCard pricesList={marketPrices} />
-                </div>
+                <MarketPricesView />
               )}
 
               {/* TAB: BUYER OFFERS */}
@@ -391,20 +464,13 @@ export default function FarmerDashboard({ onNavigate }) {
                 </div>
               )}
 
-              {/* TAB: TRACK PRODUCE */}
-              {activeTab === 'track' && (
-                <div className={styles.tabSection}>
-                  <div className={styles.tabHeaderRow}>
-                    <div>
-                      <h2 className={styles.tabTitle}>Track Produce Journey</h2>
-                      <p className={styles.tabSubtitle}>Verified farm-to-market chain traceability</p>
-                    </div>
-                  </div>
-                  <BatchCard
-                    batch={primaryBatch}
-                    onTrackClick={(batchId) => handleNavigateSubView('batch-details', { batchId, batch: primaryBatch })}
-                  />
-                </div>
+              {/* TAB: DEDICATED BATCH JOURNEY VIEW */}
+              {activeTab === 'track-journey' && (
+                <TrackJourneyView
+                  batchId={subViewData?.batchId || primaryBatch?.batchId}
+                  batch={subViewData?.batch || primaryBatch}
+                  onNavigateView={handleNavigateSubView}
+                />
               )}
 
               {/* TAB: VERIFIED HISTORY */}
@@ -420,13 +486,14 @@ export default function FarmerDashboard({ onNavigate }) {
                 </div>
               )}
 
-              {/* TAB: PROFILE & SETTINGS */}
-              {(activeTab === 'profile' || activeTab === 'settings') && (
-                <SettingsView
-                  farmerProfile={farmerProfile}
-                  onProfileUpdated={handleProfileUpdated}
-                  onLogout={handleLogout}
-                />
+              {/* TAB: FARMER PROFILE */}
+              {activeTab === 'profile' && (
+                <ProfileView onProfileUpdated={handleProfileUpdated} />
+              )}
+
+              {/* TAB: APPLICATION SETTINGS */}
+              {activeTab === 'settings' && (
+                <SettingsView onLogout={handleLogout} />
               )}
             </>
           )}
