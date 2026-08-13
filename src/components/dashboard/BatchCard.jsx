@@ -16,7 +16,7 @@ const DEFAULT_STAGES = [
  *
  * @param {{ batch?: any, onTrackClick?: (batchId: string) => void }} props
  */
-export default function BatchCard({ batch: inputBatch, onTrackClick }) {
+export default function BatchCard({ batch: inputBatch, onTrackClick, onQrClick }) {
   const batch = inputBatch || {
     batchId: 'UZH-TOM-00128',
     crop: 'Tomato',
@@ -40,8 +40,9 @@ export default function BatchCard({ batch: inputBatch, onTrackClick }) {
             <Package size={18} />
           </div>
           <div>
-            <h2 className={styles.cardTitle}>{batch.crop} Harvest</h2>
-            <p className={styles.batchIdCode}>{batch.batchId}</p>
+            <h2 className={styles.cardTitle}>
+              {batch.crop} <span className={styles.batchIdTag}>({batch.batchId})</span>
+            </h2>
           </div>
         </div>
         <span className={styles.statusBadge}>

@@ -91,7 +91,7 @@ export default function NotificationModal({ isOpen, role = 'farmer', onClose, on
                       <strong className={styles.itemTitle}>{item.title}</strong>
                     </div>
                     <span className={styles.itemTime}>
-                      <Clock size={11} /> {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      <Clock size={11} /> {item.createdAt ? new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                     </span>
                   </div>
 

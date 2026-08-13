@@ -238,7 +238,7 @@ export default function MarketPricesView() {
             <div className={styles.card}>
               <div className={styles.cardHeaderRow}>
                 <span className={styles.cardCategory}>MARKET PRICE RANGE</span>
-                <span className={styles.rangeSub}>Today's Spread</span>
+                <span className={styles.rangeSub}>Today&apos;s Spread</span>
               </div>
 
               <div className={styles.rangeValuesGrid}>

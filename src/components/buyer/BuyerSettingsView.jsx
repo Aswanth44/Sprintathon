@@ -294,7 +294,7 @@ export default function BuyerSettingsView({ onLogout }) {
             <div className={styles.toggleRow}>
               <div>
                 <strong className={styles.toggleTitle}>Order Tracking Updates</strong>
-                <p className={styles.toggleDesc}>Logistics milestone tracking updates (Pickup $\rightarrow$ Warehouse)</p>
+                <p className={styles.toggleDesc}>Logistics milestone tracking updates (Pickup → Warehouse)</p>
               </div>
               <input
                 type="checkbox"

@@ -125,6 +125,9 @@
   padding: 2px 8px;
   border-radius: var(--radius-full);
   width: fit-content;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .infoMetaGrid {

@@ -213,7 +213,7 @@ export default function BuyerDashboardOverview({ onNavigateTab }) {
                 activePurchasesList.slice(0, 2).map((p) => (
                   <div key={p.purchaseId} className={styles.purchaseItem}>
                     <div className={styles.itemHeadRow}>
-                      <strong>{p.crop} ({p.batchId})</strong>
+                      <strong>{p.crop} <span className={styles.batchIdTag}>({p.batchId})</span></strong>
                       <span className={styles.statusConfirmed}>● {p.status}</span>
                     </div>
 

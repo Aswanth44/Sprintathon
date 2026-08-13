@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { X, CheckCircle2, MapPin, Calendar, Award, User, Sprout, Tag, ArrowRight } from 'lucide-react'
+import { X, CheckCircle2, MapPin, Calendar, Award, User, Sprout, Tag, ArrowRight, ShieldCheck } from 'lucide-react'
 import styles from './ViewBatchModal.module.css'
 
 /**
@@ -48,7 +48,7 @@ export default function ViewBatchModal({ isOpen, batch, onClose, onMakeOfferClic
           <div className={styles.headerTitleWrap}>
             <Sprout className={styles.headerIcon} size={22} />
             <div>
-              <h2 className={styles.modalTitle}>{cropName} Batch ({batchId})</h2>
+              <h2 className={styles.modalTitle}>{cropName} Batch <span className={styles.batchIdTag}>({batchId})</span></h2>
               <span className={styles.verifiedBadge}>
                 <CheckCircle2 size={12} /> Verified Produce
               </span>

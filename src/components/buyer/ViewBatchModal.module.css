@@ -62,6 +62,19 @@
   font-weight: var(--font-bold);
   color: var(--color-green-deep);
   margin: 0 0 2px 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.batchIdTag {
+  font-size: 0.85em;
+  font-weight: var(--font-bold);
+  color: var(--color-green-mid);
+  white-space: nowrap;
+  display: inline-block;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .verifiedBadge {

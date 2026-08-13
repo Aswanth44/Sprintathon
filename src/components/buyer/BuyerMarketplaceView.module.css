@@ -179,7 +179,8 @@
 .cropTitleWrap {
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .cropName {
@@ -187,6 +188,9 @@
   font-weight: var(--font-extrabold);
   color: var(--color-green-deep);
   margin: 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .batchIdTag {
@@ -196,6 +200,10 @@
   font-weight: var(--font-bold);
   padding: 2px 8px;
   border-radius: var(--radius-full);
+  white-space: nowrap;
+  display: inline-block;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .locationSub {

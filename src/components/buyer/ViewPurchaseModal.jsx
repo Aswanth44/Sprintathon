@@ -57,7 +57,7 @@ export default function ViewPurchaseModal({ isOpen, purchase, onClose }) {
           <div className={styles.totalBox}>
             <div>
               <span className={styles.totalLabel}>Total Procurement Amount</span>
-              <div className={styles.totalVal}>₹{purchase.totalAmount?.toLocaleString()}</div>
+              <div className={styles.totalVal}>₹{(purchase.totalAmount ?? ((purchase.quantity || 500) * (purchase.purchasePrice || 44)))?.toLocaleString()}</div>
             </div>
             <span className={styles.statusConfirmed}>{purchase.status}</span>
           </div>

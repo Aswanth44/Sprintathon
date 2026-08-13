@@ -54,19 +54,22 @@
   font-size: 0.88rem;
   font-weight: var(--font-extrabold);
   color: var(--color-green-deep);
-  line-height: 1.1;
+  line-height: 1.25;
+  margin: 0;
+  white-space: normal;
   word-break: normal;
-  overflow-wrap: normal;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 }
 
-.batchIdCode {
-  font-size: 0.68rem;
+.batchIdTag {
+  font-size: 0.72rem;
   font-family: monospace;
   color: var(--color-green-mid);
   font-weight: var(--font-semibold);
+  white-space: nowrap;
+  display: inline-block;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 .statusBadge {

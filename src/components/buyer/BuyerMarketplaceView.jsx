@@ -298,7 +298,7 @@ export default function BuyerMarketplaceView({ onNavigateTab }) {
                 <div>
                   <div className={styles.cropTitleWrap}>
                     <h3 className={styles.cropName}>{batch.crop}</h3>
-                    <span className={styles.batchIdTag}>{batch.batchId}</span>
+                    <span className={styles.batchIdTag}>({batch.batchId})</span>
                   </div>
                   <div className={styles.locationSub}>
                     <MapPin size={13} /> {batch.location}
