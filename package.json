@@ -1,0 +1,14 @@
+{
+  "name": "uzhavarsetu-root",
+  "version": "1.0.0",
+  "description": "UzhavarSetu Root Development Runner",
+  "main": "index.js",
+  "scripts": {
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "mvn spring-boot:run -f backend/pom.xml",
+    "dev": "concurrently -k -n \"FRONTEND,BACKEND\" -c \"cyan,green\" \"npm run dev --prefix frontend\" \"mvn spring-boot:run -f backend/pom.xml\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
